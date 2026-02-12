@@ -166,11 +166,12 @@
     <a class="nav-btn" href="Dashboard.php">Dashboard</a>
     <a class="nav-btn" href="Caregivers.php">Caregivers</a>
     <a class="nav-btn" href="Elders.php">Elders</a>
+    <a class="nav-btn" href="Doctors.php">Doctors</a>
     <a class="nav-btn" href="CaregiverLinks.php">Caregiver Links</a>
     <a class="nav-btn" href="HealthAI.php">Health & AI</a>
     <a class="nav-btn" href="Reminders.php">Reminders</a>
     <a class="nav-btn active" href="SOS.php">SOS & Emergency</a>
-    <a class="nav-btn" href="Messages.php">Messages</a>
+    <a class="nav-btn" href="Complains.php">Complains</a>
     <a class="nav-btn" href="Location.php">Location</a>
 
     <a class="nav-btn logout" href="Login.php">Logout</a>
@@ -204,7 +205,8 @@
             <td>09:15 AM</td>
             <td>Active</td>
             <td class="actions">
-              <button class="action-btn">Respond</button>
+            <button class="action-btn" onclick="window.location.href='SOSView.php?id=1'">View</button>
+
             </td>
           </tr>
           <tr>
@@ -214,7 +216,7 @@
             <td>03:20 PM</td>
             <td>Active</td>
             <td class="actions">
-              <button class="action-btn">Respond</button>
+              <button class="action-btn">View</button>
             </td>
           </tr>
         </tbody>

@@ -176,11 +176,12 @@
     <a class="nav-btn" href="Dashboard.php">Dashboard</a>
     <a class="nav-btn" href="Caregivers.php">Caregivers</a>
     <a class="nav-btn" href="Elders.php">Elders</a>
+    <a class="nav-btn" href="Doctors.php">Doctors</a>
     <a class="nav-btn" href="CaregiverLinks.php">Caregiver Links</a>
     <a class="nav-btn" href="HealthAI.php">Health & AI</a>
     <a class="nav-btn active" href="Reminders.php">Reminders</a>
     <a class="nav-btn" href="SOS.php">SOS & Emergency</a>
-    <a class="nav-btn" href="Messages.php">Messages</a>
+    <a class="nav-btn" href="Complains.php">Complains</a>
     <a class="nav-btn" href="Location.php">Location</a>
 
     <a class="nav-btn logout" href="Login.php">Logout</a>
@@ -190,9 +191,7 @@
   <div class="content">
     <h1>Reminders</h1>
 
-    <div class="top-bar">
-      <button class="add-btn">+ Add Reminder</button>
-    </div>
+<br>
 
     <div class="card">
       <table>
@@ -203,7 +202,6 @@
             <th>Reminder Type</th>
             <th>Time</th>
             <th>Status</th>
-            <th>Actions</th>
           </tr>
         </thead>
 
@@ -215,7 +213,6 @@
             <td>08:00 AM</td>
             <td>Active</td>
             <td class="actions">
-              <button class="action-btn">Respond</button>
             </td>
           </tr>
           <tr>
@@ -225,7 +222,6 @@
             <td>05:00 PM</td>
             <td>Inactive</td>
             <td class="actions">
-              <button class="action-btn">Respond</button>
             </td>
           </tr>
         </tbody>

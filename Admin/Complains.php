@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Messages</title>
+  <title>Complains</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -158,11 +158,12 @@
     <a class="nav-btn" href="Dashboard.php">Dashboard</a>
     <a class="nav-btn" href="Caregivers.php">Caregivers</a>
     <a class="nav-btn" href="Elders.php">Elders</a>
+    <a class="nav-btn" href="Doctors.php">Doctors</a>
     <a class="nav-btn" href="CaregiverLinks.php">Caregiver Links</a>
     <a class="nav-btn" href="HealthAI.php">Health & AI</a>
     <a class="nav-btn" href="Reminders.php">Reminders</a>
     <a class="nav-btn" href="SOS.php">SOS & Emergency</a>
-    <a class="nav-btn active" href="Messages.php">Messages</a>
+    <a class="nav-btn active" href="Complains.php">Complains</a>
     <a class="nav-btn" href="Location.php">Location</a>
 
     <a class="nav-btn logout" href="Login.php">Logout</a>
@@ -170,7 +171,7 @@
 
   <!-- CONTENT -->
   <div class="content">
-    <h1>Messages</h1>
+    <h1>Complains</h1>
 <br>
 
     <div class="card">
@@ -194,7 +195,8 @@
             <td>09:00 AM</td>
             <td>Unread</td>
             <td>
-              <button class="action-btn">Respond</button>
+              <a href="Respond.php?id=1" class="action-btn">Respond</a>
+
             </td>
           </tr>
 

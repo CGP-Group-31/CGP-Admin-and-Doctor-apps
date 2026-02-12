@@ -173,11 +173,12 @@
     <a class="nav-btn" href="Dashboard.php">Dashboard</a>
     <a class="nav-btn active" href="Caregivers.php">Caregivers</a>
     <a class="nav-btn" href="Elders.php">Elders</a>
+    <a class="nav-btn" href="Doctors.php">Doctors</a>
     <a class="nav-btn" href="CaregiverLinks.php">Caregiver Links</a>
     <a class="nav-btn" href="HealthAI.php">Health & AI</a>
     <a class="nav-btn" href="Reminders.php">Reminders</a>
     <a class="nav-btn" href="SOS.php">SOS & Emergency</a>
-    <a class="nav-btn" href="Messages.php">Messages</a>
+    <a class="nav-btn" href="Complains.php">Complains</a>
     <a class="nav-btn" href="Location.php">Location</a>
 
     <a class="nav-btn logout" href="Login.php">Logout</a>
@@ -186,10 +187,16 @@
   <!-- CONTENT -->
   <div class="content">
     <h1>Caregivers</h1>
-
-    <div class="top-bar">
-      <button class="add-btn">+ Add Caregiver</button>
-    </div>
+<br>
+<input type="text" id="searchInput" placeholder="Search Caregivers..."
+  style="
+    width: 280px;
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    font-size: 14px;
+  ">
 
     <div class="card">
       <table>
@@ -205,30 +212,59 @@
         </thead>
 
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>John Silva</td>
-            <td>0771234567</td>
-            <td>Active</td>
-            <td>2</td>
-            <td class="actions">
-              <button class="view">View</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Maria Fernando</td>
-            <td>0719876543</td>
-            <td>Inactive</td>
-            <td>0</td>
-            <td class="actions">
-              <button class="view">View</button>
-            </td>
-          </tr>
-        </tbody>
+  <tr>
+    <td>1</td>
+    <td>John Silva</td>
+    <td>0771234567</td>
+    <td>Active</td>
+    <td>2</td>
+    <td class="actions">
+      <a href="CaregiversView.php?id=1">
+        <button class="view">View</button>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Maria Fernando</td>
+    <td>0719876543</td>
+    <td>Inactive</td>
+    <td>0</td>
+    <td class="actions">
+      <a href="CaregiversView.php?id=2">
+        <button class="view">View</button>
+      </a>
+    </td>
+  </tr>
+</tbody>
+
       </table>
     </div>
   </div>
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const tableBody = document.querySelector("table tbody");
+
+  searchInput.addEventListener("keyup", function () {
+    const filter = this.value.toLowerCase();
+    const rows = tableBody.getElementsByTagName("tr");
+
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].getElementsByTagName("td");
+      let match = false;
+
+      for (let j = 1; j < cells.length - 1; j++) { 
+        // skip ID and Actions column
+        if (cells[j].textContent.toLowerCase().includes(filter)) {
+          match = true;
+          break;
+        }
+      }
+
+      rows[i].style.display = match ? "" : "none";
+    }
+  });
+</script>
 
 </body>
 </html>

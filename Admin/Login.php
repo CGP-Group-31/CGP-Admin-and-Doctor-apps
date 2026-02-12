@@ -5,143 +5,105 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Login</title>
 
-  <!-- Styles -->
   <style>
-    /* ---------- VARIABLES ---------- */
+    /* ===== COLOR VARIABLES (ONLY YOUR PALETTE) ===== */
     :root {
-      --header-bg: #1F6F78;
-      --page-bg: #F6F7F3;
-      --card-bg: #FFFFFF;
+      --header: #1F6F78;
+      --checkins: #D6EFE6;
+      --bg: #F6F7F3;
+      --white: #FFFFFF;
       --text-main: #1E2A2A;
-      --text-secondary: #6F7F7D;
-      --input-bg: #FFFFFF;
-      --btn-primary: #1F6F78;
-      --btn-primary-hover: #16555f;
-      --link-color: #1F6F78;
-      --danger: #C62828;
-      --accent: #E6B450;
+      --text-muted: #6F7F7D;
+      --reminder: #E6B450;
+      --sos: #C62828;
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
 
     body {
-      background: var(--page-bg);
-      color: var(--text-main);
-      display: flex;
       height: 100vh;
+      background: var(--bg);
+      display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* ---------- HEADER / NAVBAR ---------- */
-    header {
-      width: 100%;
-      background: var(--header-bg);
-      padding: 15px 30px;
-      color: #fff;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    /* ---------- CONTAINER ---------- */
-    .login-wrapper {
-      width: 100%;
-      max-width: 400px;
-      margin: 30px auto;
+    /* ===== LOGIN CARD ===== */
+    .login-card {
+      width: 360px;
+      background: var(--white);
       padding: 30px;
-      background: var(--card-bg);
       border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
-    .login-wrapper h2 {
+    .login-card h2 {
       text-align: center;
-      color: var(--header-bg);
+      color: var(--header);
       margin-bottom: 25px;
     }
 
-    /* ---------- INPUTS ---------- */
+    /* ===== INPUTS ===== */
     .login-input {
       width: 100%;
-      padding: 12px 14px;
+      padding: 12px;
       margin-bottom: 18px;
-      border: 1px solid #ccc;
-      border-radius: 7px;
-      background: var(--input-bg);
-      font-size: 15px;
+      border: 1px solid var(--text-muted);
+      border-radius: 6px;
+      font-size: 14px;
       color: var(--text-main);
     }
 
     .login-input:focus {
       outline: none;
-      border-color: var(--header-bg);
-      box-shadow: 0 0 5px rgba(31,111,120,0.3);
+      border-color: var(--header);
     }
 
-    /* ---------- BUTTON ---------- */
-    .btn-login {
+    /* ===== BUTTON ===== */
+    .login-btn {
       width: 100%;
       padding: 12px;
+      background: var(--header);
+      color: var(--white);
       border: none;
-      border-radius: 7px;
-      background-color: var(--btn-primary);
-      color: #fff;
-      font-size: 16px;
+      border-radius: 6px;
+      font-size: 15px;
       cursor: pointer;
-      transition: 0.2s ease;
     }
 
-    .btn-login:hover {
-      background-color: var(--btn-primary-hover);
+    .login-btn:hover {
+      opacity: 0.9;
     }
 
-    .forgot-link {
-      display: block;
-      margin-top: 10px;
-      text-align: right;
-      color: var(--link-color);
-      font-size: 14px;
-      text-decoration: none;
-    }
-
-    .forgot-link:hover {
-      text-decoration: underline;
-    }
-
-    /* ---------- ERROR MESSAGE ---------- */
-    .error-msg {
-      color: var(--danger);
+    /* ===== ERROR MESSAGE (OPTIONAL) ===== */
+    .error {
+      color: var(--sos);
       text-align: center;
+      font-size: 13px;
       margin-bottom: 10px;
-      font-size: 14px;
+      display: none;
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    Admin Dashboard
-  </header>
-
-  <div class="login-wrapper">
+  <div class="login-card">
     <h2>Admin Login</h2>
 
-    <!-- Error (show if needed) -->
-    <div id="error" class="error-msg" style="display: none;">Invalid credentials</div>
+    <!-- Error message if needed -->
+    <div class="error">Invalid username or password</div>
 
-    <!-- Login Form -->
-    <form id="loginForm">
+    <form>
       <input
         type="text"
         class="login-input"
         placeholder="Username"
-        id="username"
         required
       />
 
@@ -149,14 +111,13 @@
         type="password"
         class="login-input"
         placeholder="Password"
-        id="password"
         required
       />
 
-      <button type="submit" class="btn-login">LOGIN</button>
+      <button type="submit" class="login-btn">
+        LOGIN
+      </button>
     </form>
-
-    <a href="#" class="forgot-link">Forgot Password?</a>
   </div>
 
 </body>

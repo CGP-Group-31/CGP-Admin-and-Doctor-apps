@@ -158,11 +158,12 @@
     <a class="nav-btn" href="Dashboard.php">Dashboard</a>
     <a class="nav-btn" href="Caregivers.php">Caregivers</a>
     <a class="nav-btn" href="Elders.php">Elders</a>
+    <a class="nav-btn" href="Doctors.php">Doctors</a>
     <a class="nav-btn" href="CaregiverLinks.php">Caregiver Links</a>
     <a class="nav-btn" href="HealthAI.php">Health & AI</a>
     <a class="nav-btn" href="Reminders.php">Reminders</a>
     <a class="nav-btn" href="SOS.php">SOS & Emergency</a>
-    <a class="nav-btn" href="Messages.php">Messages</a>
+    <a class="nav-btn" href="Complains.php">Complains</a>
     <a class="nav-btn active" href="Location.php">Location</a>
 
     <a class="nav-btn logout" href="Login.php">Logout</a>
@@ -171,6 +172,22 @@
   <!-- CONTENT -->
   <div class="content">
     <h1>Location</h1>
+    <input
+  type="text"
+  id="searchInput"
+  placeholder="Search elder by name or location..."
+  onkeyup="searchTable()"
+  style="
+    width: 100%;
+    max-width: 350px;
+    padding: 10px 14px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  "
+>
+
 <br>
 
     <div class="card">
@@ -192,7 +209,8 @@
             <td>Elder</td>
             <td>Colombo</td>
             <td>
-              <button class="action-btn">View</button>
+              <a href="LocationView.php?id=1" class="action-btn">View</a>
+
             </td>
           </tr>
 
@@ -209,6 +227,19 @@
       </table>
     </div>
   </div>
+<script>
+function searchTable() {
+  const input = document.getElementById("searchInput");
+  const filter = input.value.toLowerCase();
+  const table = document.querySelector("table");
+  const rows = table.getElementsByTagName("tr");
+
+  for (let i = 1; i < rows.length; i++) {
+    let text = rows[i].innerText.toLowerCase();
+    rows[i].style.display = text.includes(filter) ? "" : "none";
+  }
+}
+</script>
 
 </body>
 </html>
