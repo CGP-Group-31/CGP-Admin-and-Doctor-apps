@@ -1,250 +1,154 @@
+<?php
+session_start();
+require 'include/db.php';
+
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: Login.php");
+    exit;
+}
+
+try {
+    $query = "
+        SELECT 
+            D.DoctorID,
+            U.FullName,
+            U.Phone,
+            D.LicenseNumber,
+            D.Specialization,
+            D.Hospital
+        FROM Doctor D
+        JOIN Users U ON D.DoctorID = U.UserID
+        WHERE U.RoleID = 2 
+        ORDER BY U.FullName ASC";
+        
+    $stmt = $pdo->query($query);
+    $doctors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Database Error: " . $e->getMessage());
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Doctors</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Admin | Doctors Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-color: #1F6F78;
+            --bg: #F6F7F3;
+            --card: #FFFFFF;
+            --text-main: #1E2A2A;
+            --text-muted: #6F7F7D;
+            --accent: #E6B450;
+            --sos: #C62828;
+        }
 
-  <style>
-    :root {
-      --sidebar: #1F6F78;
-      --bg: #F6F7F3;
-      --card: #FFFFFF;
-      --text-main: #1E2A2A;
-      --text-muted: #6F7F7D;
-      --checkins: #D6EFE6;
-      --sos: #C62828;
-    }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); display: flex; min-height: 100vh; }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+        .sidebar { 
+            width: var(--sidebar-width); background: var(--sidebar-color); color: #fff; 
+            height: 100vh; position: fixed; left: 0; top: 0; 
+            display: flex; flex-direction: column; z-index: 1000; overflow-y: auto; 
+        }
+        .sidebar h2 { padding: 25px 20px; text-align: center; font-size: 1.5rem; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-btn { padding: 12px 20px; text-decoration: none; color: rgba(255,255,255,0.8); font-size: 14px; display: flex; align-items: center; transition: 0.3s; border-left: 4px solid transparent; }
+        .nav-btn i { margin-right: 12px; width: 20px; text-align: center; }
+        .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-left: 4px solid var(--accent); }
+        .logout { margin-top: auto; background: var(--sos); justify-content: center; font-weight: bold; padding: 15px; }
 
-    body {
-      display: flex;
-      min-height: 100vh;
-      background: var(--bg);
-    }
+        .content { flex: 1; margin-left: var(--sidebar-width); padding: 40px; }
+        .header-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header-box h1 { color: var(--sidebar-color); font-size: 2rem; }
 
-    /* ===== SIDEBAR ===== */
-    .sidebar {
-      width: 240px;
-      background: var(--sidebar);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-    }
+        .search-box { position: relative; margin-bottom: 25px; }
+        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .search-box input { padding: 12px 15px 12px 45px; border-radius: 30px; border: 1px solid #ddd; width: 400px; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-    .sidebar h2 {
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
+        .card { background: var(--card); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        thead th { background: #f1f5f9; padding: 18px 15px; text-align: left; font-size: 12px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; }
+        tbody td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        tbody tr:hover { background-color: #fcfdfe; }
 
-    .nav-btn {
-      padding: 14px 20px;
-      text-decoration: none;
-      color: #fff;
-      font-size: 14px;
-      display: block;
-    }
-
-    .nav-btn:hover,
-    .nav-btn.active {
-      background: rgba(255,255,255,0.15);
-    }
-
-    .logout {
-      margin-top: auto;
-      background: var(--sos);
-      text-align: center;
-    }
-
-    /* ===== CONTENT ===== */
-    .content {
-      flex: 1;
-      padding: 20px;
-    }
-
-    h1 {
-      color: var(--text-main);
-      margin-bottom: 15px;
-    }
-
-    /* ===== SEARCH ===== */
-    .search {
-      max-width: 350px;
-      padding: 10px 14px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin-bottom: 15px;
-    }
-
-    /* ===== CARD ===== */
-    .card {
-      background: var(--card);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #ddd;
-      font-size: 14px;
-      text-align: left;
-    }
-
-    th {
-      background: var(--checkins);
-    }
-
-    .action-btn {
-      padding: 6px 14px;
-      border: none;
-      border-radius: 4px;
-      background: var(--checkins);
-      cursor: pointer;
-    }
-  </style>
+        .badge-licence { background: #e0f2f1; color: #00796b; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-weight: bold; }
+        .btn-action { padding: 8px 16px; background: var(--sidebar-color); color: white; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 600; transition: 0.3s; }
+        .btn-action:hover { background: #165057; }
+    </style>
 </head>
-
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <h2>Admin Panel</h2>
+    <div class="sidebar">
+        <h2>ELDERCARE</h2>
+        <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+        <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+        <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+        <a class="nav-btn active" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+        <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+        <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+        <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+        <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+        <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+        <a class="nav-btn logout" href="Login.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+    </div>
 
-  <a class="nav-btn" href="Dashboard.php">Dashboard</a>
-  <a class="nav-btn" href="Caregivers.php">Caregivers</a>
-  <a class="nav-btn" href="Elders.php">Elders</a>
-  <a class="nav-btn" href="Doctors.php">Doctors</a>
-  <a class="nav-btn" href="CaregiverLinks.php">Caregiver Links</a>
-  <a class="nav-btn" href="HealthAI.php">Health & AI</a>
-  <a class="nav-btn" href="Reminders.php">Reminders</a>
-  <a class="nav-btn" href="SOS.php">SOS & Emergency</a>
-  <a class="nav-btn" href="Complains.php">Complains</a>
-  <a class="nav-btn" href="Location.php">Location</a>
+    <div class="content">
+        <div class="header-box">
+            <h1>Doctor Directory</h1>
+            <a href="AddDoctor.php" class="btn-action" style="padding: 12px 20px;">+ Add New Doctor</a>
+        </div>
 
-  <a class="nav-btn logout" href="Login.php">Logout</a>
-</div>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search by ID, name, or specialty...">
+        </div>
 
-<!-- CONTENT -->
-<div class="content">
-  <h1>Doctors</h1>
+        <div class="card">
+            <table id="doctorTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>License</th>
+                        <th>Name</th>
+                        <th>Specialization</th>
+                        <th>Hospital</th>
+                        <th>Contact No</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($doctors)): ?>
+                        <tr><td colspan="7" style="text-align:center; padding: 40px; color: var(--text-muted);">No doctors found.</td></tr>
+                    <?php else: ?>
+                        <?php foreach($doctors as $d): ?>
+                        <tr>
+                            <td style="color: var(--text-muted); font-weight: bold;">#<?= htmlspecialchars($d['DoctorID']) ?></td>
+                            <td><span class="badge-licence"><?= htmlspecialchars($d['LicenseNumber']) ?></span></td>
+                            <td><strong><?= htmlspecialchars($d['FullName']) ?></strong></td>
+                            <td><?= htmlspecialchars($d['Specialization']) ?></td>
+                            <td><i class="fas fa-hospital" style="color: #999;"></i> <?= htmlspecialchars($d['Hospital']) ?></td>
+                            <td><?= htmlspecialchars($d['Phone']) ?></td>
+                            <td><a href="DoctorView.php?id=<?= $d['DoctorID'] ?>" class="btn-action">View Profile</a></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
- <div style="margin-bottom:15px;">
-  <input
-    type="text"
-    id="searchInput"
-    placeholder="Search doctor or elder..."
-    onkeyup="searchTable()"
-    style="
-      width: 300px;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    "
-  >
-</div>
-<div style="margin-bottom:15px;">
-  <a href="AddDoctor.php">
-    <button style="
-      padding: 10px 18px;
-      border: none;
-      border-radius: 6px;
-      background: #1F6F78;
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
-    ">
-      + Add Doctor
-    </button>
-  </a>
-</div>
-
-
-
-  <div class="card">
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Doctor Name</th>
-        <th>Specialization</th>
-        <th>Contact</th>
-        <th>Linked Elders</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>Dr. Perera</td>
-        <td>Cardiologist</td>
-        <td>0771234567</td>
-        <td>
-          Kamal Silva<br>
-          Sunil Fernando
-        </td>
-        <td>
-      <button class="action-btn" onclick="window.location.href='DoctorView.php?id=1'">View</button>
-
-        </td>
-      </tr>
-
-      <tr>
-        <td>2</td>
-        <td>Dr. Silva</td>
-        <td>Neurologist</td>
-        <td>0719876543</td>
-        <td>
-          Nimal Perera
-        </td>
-        <td>
-          <button class="action-btn">View</button>
-        </td>
-      </tr>
-
-      <tr>
-        <td>3</td>
-        <td>Dr. Jayasinghe</td>
-        <td>General Physician</td>
-        <td>0764567890</td>
-        <td>
-          Not Assigned
-        </td>
-        <td>
-          <button class="action-btn">View</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<script>
-function searchTable() {
-  const input = document.getElementById("searchInput");
-  const filter = input.value.toLowerCase();
-  const table = document.querySelector("table");
-  const rows = table.getElementsByTagName("tr");
-
-  for (let i = 1; i < rows.length; i++) { // skip header
-    let rowText = rows[i].innerText.toLowerCase();
-    rows[i].style.display = rowText.includes(filter) ? "" : "none";
-  }
-}
-</script>
-
-
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let rows = document.querySelectorAll('#doctorTable tbody tr');
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(filter) ? '' : 'none';
+            });
+        });
+    </script>
 </body>
 </html>
