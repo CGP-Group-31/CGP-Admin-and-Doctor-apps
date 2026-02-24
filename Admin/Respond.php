@@ -29,7 +29,7 @@ body {
   background: var(--bg);
 }
 
-/* ===== SIDEBAR ===== */
+
 .sidebar {
   width: 240px;
   background: var(--sidebar);
@@ -63,7 +63,7 @@ body {
   text-align: center;
 }
 
-/* ===== CONTENT ===== */
+
 .content {
   flex: 1;
   padding: 20px;
@@ -74,7 +74,7 @@ h1 {
   margin-bottom: 15px;
 }
 
-/* ===== CARD ===== */
+
 .card {
   background: var(--card);
   padding: 20px;
@@ -83,7 +83,6 @@ h1 {
   max-width: 700px;
 }
 
-/* ===== DETAILS ===== */
 .detail-row {
   margin-bottom: 12px;
 }
@@ -98,7 +97,7 @@ h1 {
   color: var(--text-muted);
 }
 
-/* ===== TEXTAREA ===== */
+
 textarea {
   width: 100%;
   padding: 10px;
@@ -109,7 +108,7 @@ textarea {
   margin-top: 10px;
 }
 
-/* ===== BUTTON ===== */
+
 .btn {
   margin-top: 15px;
   padding: 8px 18px;
@@ -124,7 +123,7 @@ textarea {
 
 <body>
 
-<!-- SIDEBAR -->
+
 <div class="sidebar">
   <h2>Admin Panel</h2>
 
@@ -142,13 +141,13 @@ textarea {
   <a class="nav-btn logout" href="Login.php">Logout</a>
 </div>
 
-<!-- CONTENT -->
+
 <div class="content">
   <h1>Respond to Complaint</h1>
 
   <div class="card">
 
-    <!-- Complaint Details -->
+
     <div class="detail-row">
       <strong>Elder Name:</strong>
       <span>Kamal Silva</span>
@@ -164,7 +163,6 @@ textarea {
       <span>Need help with medication</span>
     </div>
 
-    <!-- Reply Section -->
     <form>
       <div class="detail-row">
         <strong>Your Response:</strong>

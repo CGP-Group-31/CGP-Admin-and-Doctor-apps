@@ -8,8 +8,6 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 try {
-    // Joining SOSLogs with Users to get Elder Names
-    // We use a CASE statement to make TriggerTypeID readable
     $query = "
         SELECT 
             S.SOSID,
@@ -58,7 +56,7 @@ try {
 
     body { display: flex; min-height: 100vh; background: var(--bg); }
 
-    /* ===== SIDEBAR ===== */
+
     .sidebar { width: 240px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; position: fixed; height: 100vh; }
     .sidebar h2 { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); }
     .nav-btn { padding: 14px 20px; text-decoration: none; color: #fff; font-size: 14px; display: flex; align-items: center; transition: 0.3s; }
@@ -66,18 +64,23 @@ try {
     .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.15); }
     .logout { margin-top: auto; background: var(--sos); text-align: center; font-weight: bold; }
 
-    /* ===== CONTENT ===== */
+
     .content { flex: 1; margin-left: 240px; padding: 40px; }
-    h1 { color: var(--text-main); margin-bottom: 5px; }
+   h1 { 
+    color: var(--sidebar);
+    margin-bottom: 20px; 
+    font-size: 2rem; 
+    font-weight: 700;
+}
     .subtitle { color: var(--text-muted); margin-bottom: 25px; font-size: 14px; }
 
-    /* ===== TABLE ===== */
+
     .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
     th { background: #f8fafb; color: var(--text-muted); text-transform: uppercase; font-size: 12px; }
 
-    /* SOS Alert Styling */
+
     .type-badge { font-weight: bold; color: var(--sos); display: flex; align-items: center; gap: 8px; }
     .status-active { color: #2e7d32; font-weight: bold; background: #e8f5e9; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
 
@@ -115,7 +118,7 @@ try {
 
   <div class="content">
     <h1>SOS & Emergency Logs</h1>
-    <p class="subtitle">Monitoring live emergency triggers and historical safety logs.</p>
+    <br>
 
     <div class="card">
       <table>

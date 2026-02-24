@@ -99,7 +99,6 @@ try {
     <div class="content">
         <div class="header-box">
             <h1>Doctor Directory</h1>
-            <a href="AddDoctor.php" class="btn-action" style="padding: 12px 20px;">+ Add New Doctor</a>
         </div>
 
         <div class="search-box">

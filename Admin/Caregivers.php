@@ -57,7 +57,6 @@ try {
             min-height: 100vh;
         }
 
-        /* FIXED SIDEBAR */
         .sidebar { 
             width: var(--sidebar-width); 
             background: var(--sidebar-color); 
@@ -90,7 +89,6 @@ try {
         
         .logout { margin-top: auto; background: var(--sos); justify-content: center; font-weight: bold; padding: 15px; }
 
-        /* SCROLLABLE CONTENT */
         .content { 
             flex: 1; 
             margin-left: var(--sidebar-width); 
@@ -105,7 +103,6 @@ try {
         .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .search-box input { padding: 12px 15px 12px 45px; border-radius: 30px; border: 1px solid #ddd; width: 400px; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         
-        /* TABLE CARD */
         .card { background: var(--card); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         
@@ -140,7 +137,6 @@ try {
         }
         .btn-view:hover { background: #165057; }
 
-        /* RESPONSIVE */
         @media (max-width: 1024px) {
             .sidebar { width: 70px; }
             .sidebar h2, .nav-btn span { display: none; }

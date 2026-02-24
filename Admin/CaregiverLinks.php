@@ -8,9 +8,6 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 try {
-    // We join careRelationships with the Users table twice:
-    // 1. Once to get the Elder's FullName (U1)
-    // 2. Once to get the Caregiver's FullName (U2)
     $query = "
         SELECT 
             CR.RelationshipID,
@@ -45,46 +42,67 @@ try {
       --card: #FFFFFF;
       --text-main: #1E2A2A;
       --text-muted: #6F7F7D;
-      --checkins: #D6EFE6;
-      --reminder: #E6B450;
+      --primary-blue: #007bff; 
+      --secondary-gray: #757575;
       --sos: #C62828;
     }
+    
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
     
     body { display: flex; height: 100vh; background: var(--bg); }
 
-    /* ===== SIDEBAR ===== */
-    .sidebar { width: 240px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+    .sidebar { width: 240px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; }
     .sidebar h2 { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); }
-    .nav-btn { padding: 14px 20px; text-decoration: none; color: #fff; font-size: 14px; display: flex; align-items: center; }
+    .nav-btn { padding: 14px 20px; text-decoration: none; color: #fff; font-size: 14px; display: flex; align-items: center; transition: 0.3s; }
     .nav-btn i { margin-right: 10px; width: 20px; text-align: center; }
-    .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.15); }
+    .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.15); border-left: 4px solid white; }
     .logout { margin-top: auto; background: var(--sos); text-align: center; font-weight: bold; }
 
-    /* ===== CONTENT ===== */
     .content { flex: 1; margin-left: 240px; padding: 40px; overflow-y: auto; }
-    h1 { color: var(--text-main); margin-bottom: 20px; font-size: 2rem; }
+    h1 { color: var(--text-main); margin-bottom: 20px; font-size: 2rem; font-weight: 700; }
 
-    /* ===== TABLE ===== */
-    .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+
+    .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
     table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
-    th { background: #f8fafb; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-size: 12px; }
+    th, td { padding: 16px; border-bottom: 1px solid #f0f0f0; text-align: left; font-size: 14px; }
+    th { background: #fdfdfd; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; font-size: 11px; font-weight: 700; }
+    tr:hover { background-color: #f8fbff; } 
 
-    /* STATUS BADGES */
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-    .primary { background: #E3F2FD; color: #1976D2; }
-    .secondary { background: #F5F5F5; color: #757575; }
+
+    .badge { padding: 6px 12px; border-radius: 50px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; }
+    
+  
+    .primary { 
+        background: #E3F2FD; 
+        color: var(--primary-blue); 
+        border: 1px solid #BBDEFB;
+    }
+    h1 { 
+    color: var(--sidebar); 
+    margin-bottom: 20px; 
+    font-size: 2rem; 
+    font-weight: 700;
+}
+    .secondary { 
+        background: #F5F5F5; 
+        color: var(--secondary-gray); 
+    }
 
     .view-btn { 
-        padding: 6px 12px; 
+        padding: 8px 16px; 
         background: var(--sidebar); 
         color: white; 
         text-decoration: none; 
-        border-radius: 4px; 
+        border-radius: 6px; 
         font-size: 12px; 
+        font-weight: 600;
+        transition: background 0.3s;
     }
+    .view-btn:hover { background: #165259; }
+
+
+    .relationship-text { font-weight: 600; color: var(--text-main); }
   </style>
 </head>
 
@@ -106,8 +124,6 @@ try {
 
   <div class="content">
     <h1>Caregiver Assignments</h1>
-    <p style="color: var(--text-muted); margin-bottom: 25px;">Managing relationships between Elders and their assigned Caregivers.</p>
-
     <div class="card">
       <table>
         <thead>
@@ -128,20 +144,20 @@ try {
           <?php else: ?>
             <?php foreach ($links as $row): ?>
             <tr>
-              <td><strong>#<?= $row['RelationshipID'] ?></strong></td>
-              <td><?= htmlspecialchars($row['ElderName']) ?></td>
+              <td><span style="color: #999;">#<?= $row['RelationshipID'] ?></span></td>
+              <td><strong><?= htmlspecialchars($row['ElderName']) ?></strong></td>
               <td><?= htmlspecialchars($row['CaregiverName']) ?></td>
-              <td><?= htmlspecialchars($row['RelationshipType']) ?></td>
+              <td class="relationship-text"><?= htmlspecialchars($row['RelationshipType']) ?></td>
               <td>
                 <?php if ($row['IsPrimary'] == 1): ?>
-                    <span class="badge primary">PRIMARY</span>
+                    <span class="badge primary"><i class="fas fa-star" style="font-size: 8px;"></i> PRIMARY</span>
                 <?php else: ?>
                     <span class="badge secondary">SECONDARY</span>
                 <?php endif; ?>
               </td>
               <td style="color: var(--text-muted);"><?= date('M d, Y', strtotime($row['CreatedAt'])) ?></td>
               <td>
-                <a href="ViewLink.php?id=<?= $row['RelationshipID'] ?>" class="view-btn">View Details</a>
+                <a href="CaregiverLinksView.php?id=<?= $row['RelationshipID'] ?>" class="view-btn">View Details</a>
               </td>
             </tr>
             <?php endforeach; ?>

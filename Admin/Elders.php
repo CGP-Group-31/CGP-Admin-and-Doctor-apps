@@ -70,7 +70,6 @@ try {
             min-height: 100vh;
         }
 
-        /* FIXED SIDEBAR */
         .sidebar { 
             width: var(--sidebar-width); 
             background: var(--sidebar-color); 
@@ -103,7 +102,6 @@ try {
         
         .logout { margin-top: auto; background: var(--sos); justify-content: center; font-weight: bold; padding: 15px; }
 
-        /* CONTENT AREA */
         .content { 
             flex: 1; 
             margin-left: var(--sidebar-width); 
@@ -114,7 +112,7 @@ try {
         .header-section { margin-bottom: 30px; }
         .header-section h1 { font-size: 2rem; color: var(--sidebar-color); }
         
-        /* SEARCH BOX */
+   
         .search-box { position: relative; margin-bottom: 25px; }
         .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .search-box input { 
@@ -126,7 +124,7 @@ try {
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
         }
         
-        /* TABLE CARD */
+    
         .card { background: var(--card); border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
         
@@ -145,7 +143,7 @@ try {
         tbody td { padding: 18px 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
         tbody tr:hover { background-color: #fcfdfe; }
         
-        /* STATUS & RISK BADGES */
+
         .badge { padding: 5px 12px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .badge-stable { background: #dcfce7; color: var(--success); }
         .badge-high { background: #fee2e2; color: var(--sos); }
@@ -189,7 +187,6 @@ try {
     <div class="content">
         <div class="header-section">
             <h1>Elder Directory</h1>
-            <p style="color: var(--text-muted);">Manage and monitor health status for all registered elders</p>
         </div>
 
         <div class="search-box">

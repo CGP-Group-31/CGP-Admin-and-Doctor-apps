@@ -2,28 +2,26 @@
 session_start();
 require 'include/db.php';
 
-// Redirect if not logged in
+
 if (!isset($_SESSION['admin_id'])) {
     header("Location: Login.php");
     exit;
 }
 
-// Stats Initializers
+
 $caregivers = 0; $elders = 0; $activeToday = 0;
 $sosToday = 0; $missedMeds = 0; $highRisk = 0;
 
 try {
-    // Caregivers stay as RoleID 4
     $caregivers = $pdo->query("SELECT COUNT(*) FROM Users WHERE RoleID = 4 AND IsActive = 1")->fetchColumn();
     
-    // NEW: Count any user who is NOT Admin (1), Doctor (2), or Caregiver (4)
     $elders = $pdo->query("SELECT COUNT(*) FROM Users WHERE RoleID NOT IN (1, 2, 4) AND IsActive = 1")->fetchColumn();
     
     $activeToday = $pdo->query("SELECT COUNT(DISTINCT UserID) FROM UserLogins WHERE CAST(LoginTime AS DATE) = CAST(GETDATE() AS DATE)")->fetchColumn();
     $sosToday = $pdo->query("SELECT COUNT(*) FROM SOSLogs WHERE CAST(TriggeredAt AS DATE) = CAST(GETDATE() AS DATE)")->fetchColumn();
     $missedMeds = $pdo->query("SELECT COUNT(*) FROM MedicationAdherence WHERE StatusID = 3 AND CAST(ScheduledFor AS DATE) = CAST(GETDATE() AS DATE)")->fetchColumn();
     
-    // NEW: Updated high risk to look for the same "Elder" group
+
     $highRisk = $pdo->query("
         SELECT COUNT(DISTINCT VR.ElderID) 
         FROM VitalRecords VR
@@ -36,7 +34,6 @@ try {
     error_log("Dashboard Query Error: " . $e->getMessage());
 }
 
-// --- SOS Graph Logic ---
 $sosLabels = [];
 $sosData = [];
 try {
@@ -77,7 +74,6 @@ try {
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: var(--bg); color: var(--text-main); display: flex; min-height: 100vh; }
 
-        /* FIXED SIDEBAR */
         .sidebar { 
             width: var(--sidebar-width); background: var(--sidebar-color); color: #fff; 
             height: 100vh; position: fixed; left: 0; top: 0; 
@@ -92,12 +88,10 @@ try {
         .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-left: 4px solid var(--accent); }
         .logout { margin-top: auto; background: var(--sos); justify-content: center; font-weight: bold; padding: 15px; }
 
-        /* CONTENT AREA */
         .content { flex: 1; margin-left: var(--sidebar-width); padding: 40px; }
         .header-box { margin-bottom: 30px; }
         .header-box h1 { font-size: 2rem; color: var(--sidebar-color); }
 
-        /* DASHBOARD CARDS */
         .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 4px solid transparent; transition: 0.2s; }
         .card:hover { transform: translateY(-5px); }
@@ -107,7 +101,6 @@ try {
         .card h3 { font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .card p { font-size: 32px; font-weight: 800; color: var(--text-main); }
 
-        /* GRAPH */
         .graph-container { background: var(--card); border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .graph-title { font-weight: bold; color: var(--text-main); margin-bottom: 20px; display: block; }
         .graph-box { height: 350px; position: relative; }

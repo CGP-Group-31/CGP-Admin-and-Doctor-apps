@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 try {
-    // Pulling directly from the Users table as requested
+
     $query = "
         SELECT 
             UserID, 
@@ -55,7 +55,7 @@ try {
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
     body { display: flex; min-height: 100vh; background: var(--bg); }
 
-    /* SIDEBAR */
+
     .sidebar { width: 240px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; position: fixed; height: 100vh; }
     .sidebar h2 { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); }
     .nav-btn { padding: 14px 20px; text-decoration: none; color: #fff; font-size: 14px; display: flex; align-items: center; }
@@ -63,9 +63,13 @@ try {
     .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.15); border-left: 4px solid var(--accent); }
     .logout { margin-top: auto; background: var(--sos); text-align: center; font-weight: bold; }
 
-    /* CONTENT */
     .content { flex: 1; margin-left: 240px; padding: 40px; }
-    h1 { color: var(--text-main); margin-bottom: 10px; }
+h1 { 
+    color: var(--sidebar); 
+    margin-bottom: 20px; 
+    font-size: 2rem; 
+    font-weight: 700;
+}
     .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
 
     .search-box {
@@ -73,7 +77,6 @@ try {
       border: 1px solid #ddd; margin-bottom: 20px; font-size: 14px; outline: none;
     }
 
-    /* TABLE */
     .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
@@ -110,7 +113,7 @@ try {
 
   <div class="content">
     <h1>Location Directory</h1>
-    <p class="subtitle">Viewing registered residential addresses for all users.</p>
+    <br>
 
     <input type="text" id="searchInput" class="search-box" placeholder="Search by name, role, or address..." onkeyup="searchTable()">
 
