@@ -97,9 +97,13 @@ try {
     </div>
 
     <div class="content">
-        <div class="header-box">
-            <h1>Doctor Directory</h1>
-        </div>
+
+<div class="header-box">
+    <h1>Doctor Directory</h1>
+    <a href="DoctorCreate.php" class="btn-action" style="background: #2E7D7A; color: #FFFFFF; padding: 12px 22px; border-radius: 8px; text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(46, 125, 122, 0.2);">
+        <i class="fas fa-plus"></i> Add New Doctor
+    </a>
+</div>
 
         <div class="search-box">
             <i class="fas fa-search"></i>
