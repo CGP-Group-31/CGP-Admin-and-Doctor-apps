@@ -77,7 +77,7 @@
     <a class="nav-btn" href="SOS.php"><i class="fas fa-heartbeat"></i> SOS & Emergency</a>
     <a class="nav-btn" href="Complains.php"><i class="fas fa-comment-dots"></i> Complains</a>
     <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> Location</a>
-
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
     <a class="nav-btn logout" href="Login.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
 

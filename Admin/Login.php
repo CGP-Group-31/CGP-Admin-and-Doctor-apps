@@ -1,21 +1,34 @@
 <?php
 session_start();
-require 'include/db.php'; // your database connection
+require 'include/db.php'; 
 
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
+    $usernameOrEmail = trim($_POST['username']); 
     $password = trim($_POST['password']);
 
-    // Fetch user with RoleID = 1 (Admin)
-    $stmt = $pdo->prepare("SELECT * FROM Users WHERE RoleID = 1 AND FullName = :username");
-    $stmt->execute(['username' => $username]);
+    // SQL Server requires a parameter for every placeholder used
+    $stmt = $pdo->prepare("SELECT * FROM Users WHERE RoleID = 1 AND (FullName = :input1 OR Email = :input2)");
+    
+    // We pass the same variable to both :input1 and :input2
+    $stmt->execute([
+        'input1' => $usernameOrEmail,
+        'input2' => $usernameOrEmail
+    ]);
+    
     $admin = $stmt->fetch();
 
     if ($admin) {
-        // For plain-text passwords:
-        if ($password === $admin['PasswordHash']) {
+        // First, check with the modern secure hash method
+        if (password_verify($password, $admin['PasswordHash'])) {
+            $_SESSION['admin_id'] = $admin['UserID'];
+            $_SESSION['admin_name'] = $admin['FullName'];
+            header('Location: Dashboard.php');
+            exit;
+        } 
+        // Fallback: Check if it's an old plain-text password account
+        elseif ($password === $admin['PasswordHash']) {
             $_SESSION['admin_id'] = $admin['UserID'];
             $_SESSION['admin_name'] = $admin['FullName'];
             header('Location: Dashboard.php');
@@ -23,11 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error = "Invalid password.";
         }
-
-        // If using hashed passwords in DB, uncomment:
-        // if (password_verify($password, $admin['PasswordHash'])) { ... }
     } else {
-        $error = "Admin not found.";
+        $error = "Admin account not found.";
     }
 }
 ?>
