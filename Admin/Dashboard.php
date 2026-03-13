@@ -58,65 +58,15 @@ try {
     <title>Admin | Dashboard Overview</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --sidebar-width: 260px;
-            --sidebar-color: #1F6F78;
-            --bg: #F6F7F3;
-            --card: #FFFFFF;
-            --text-main: #1E2A2A;
-            --text-muted: #6F7F7D;
-            --accent: #E6B450;
-            --sos: #C62828;
-            --success: #2E7D32;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); color: var(--text-main); display: flex; min-height: 100vh; }
-
-        .sidebar { 
-            width: var(--sidebar-width); background: var(--sidebar-color); color: #fff; 
-            height: 100vh; position: fixed; left: 0; top: 0; 
-            display: flex; flex-direction: column; z-index: 1000; overflow-y: auto; 
-        }
-        .sidebar h2 { padding: 25px 20px; text-align: center; font-size: 1.5rem; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .nav-btn { 
-            padding: 12px 20px; text-decoration: none; color: rgba(255,255,255,0.8); font-size: 14px; 
-            display: flex; align-items: center; transition: 0.3s; border-left: 4px solid transparent; 
-        }
-        .nav-btn i { margin-right: 12px; width: 20px; text-align: center; font-size: 16px; }
-        .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-left: 4px solid var(--accent); }
-        .logout { margin-top: auto; background: var(--sos); justify-content: center; font-weight: bold; padding: 15px; }
-
-        .content { flex: 1; margin-left: var(--sidebar-width); padding: 40px; }
-        .header-box { margin-bottom: 30px; }
-        .header-box h1 { font-size: 2rem; color: var(--sidebar-color); }
-
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 4px solid transparent; transition: 0.2s; }
-        .card:hover { transform: translateY(-5px); }
-        .card.active-users { border-color: #4AA0A1; }
-        .card.sos-card { border-color: var(--sos); }
-        .card.risk-card { border-color: var(--accent); }
-        .card h3 { font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .card p { font-size: 32px; font-weight: 800; color: var(--text-main); }
-
-        .graph-container { background: var(--card); border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .graph-title { font-weight: bold; color: var(--text-main); margin-bottom: 20px; display: block; }
-        .graph-box { height: 350px; position: relative; }
-
-        @media (max-width: 1024px) {
-            .sidebar { width: 70px; }
-            .sidebar h2, .nav-btn span { display: none; }
-            .content { margin-left: 70px; }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/theme.css">
+    
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
 
 <div class="sidebar">
-    <h2>ELDERCARE</h2>
-    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn active" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
     <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
     <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
     <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
@@ -126,7 +76,7 @@ try {
     <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>    
     <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
     <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
-    <a class="nav-btn logout" href="Login.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
 </div>
 
     <div class="content">
@@ -137,28 +87,34 @@ try {
 
         <div class="card-grid">
             <div class="card">
-                <h3><i class="fas fa-users-cog"></i> Caregivers</h3>
-                <p><?= $caregivers ?></p>
+                <a href="Caregivers.php" class="card-link">
+                    <h3><i class="fas fa-users-cog"></i> Caregivers</h3>
+                    <p data-count="<?= $caregivers ?>"><?= $caregivers ?></p>
+                </a>
             </div>
             <div class="card">
-                <h3><i class="fas fa-blind"></i> Elders</h3>
-                <p><?= $elders ?></p>
+                <a href="Elders.php" class="card-link">
+                    <h3><i class="fas fa-blind"></i> Elders</h3>
+                    <p data-count="<?= $elders ?>"><?= $elders ?></p>
+                </a>
             </div>
             <div class="card active-users">
                 <h3><i class="fas fa-signal"></i> Active Today</h3>
-                <p><?= $activeToday ?></p>
+                <p data-count="<?= $activeToday ?>"><?= $activeToday ?></p>
             </div>
             <div class="card sos-card">
-                <h3><i class="fas fa-bell"></i> SOS Alerts</h3>
-                <p><?= $sosToday ?></p>
+                <a href="SOS.php" class="card-link">
+                    <h3><i class="fas fa-bell"></i> SOS Alerts</h3>
+                    <p data-count="<?= $sosToday ?>"><?= $sosToday ?></p>
+                </a>
             </div>
             <div class="card">
                 <h3><i class="fas fa-pills"></i> Missed Meds</h3>
-                <p><?= $missedMeds ?></p>
+                <p data-count="<?= $missedMeds ?>"><?= $missedMeds ?></p>
             </div>
             <div class="card risk-card">
                 <h3><i class="fas fa-exclamation-triangle"></i> High Risk</h3>
-                <p><?= $highRisk ?></p>
+                <p data-count="<?= $highRisk ?>"><?= $highRisk ?></p>
             </div>
         </div>
 

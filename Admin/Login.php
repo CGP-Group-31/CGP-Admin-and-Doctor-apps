@@ -8,10 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usernameOrEmail = trim($_POST['username']); 
     $password = trim($_POST['password']);
 
-    // SQL Server requires a parameter for every placeholder used
+    
     $stmt = $pdo->prepare("SELECT * FROM Users WHERE RoleID = 1 AND (FullName = :input1 OR Email = :input2)");
     
-    // We pass the same variable to both :input1 and :input2
+    
     $stmt->execute([
         'input1' => $usernameOrEmail,
         'input2' => $usernameOrEmail
@@ -20,14 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $admin = $stmt->fetch();
 
     if ($admin) {
-        // First, check with the modern secure hash method
+        
         if (password_verify($password, $admin['PasswordHash'])) {
             $_SESSION['admin_id'] = $admin['UserID'];
             $_SESSION['admin_name'] = $admin['FullName'];
             header('Location: Dashboard.php');
             exit;
         } 
-        // Fallback: Check if it's an old plain-text password account
+        
         elseif ($password === $admin['PasswordHash']) {
             $_SESSION['admin_id'] = $admin['UserID'];
             $_SESSION['admin_name'] = $admin['FullName'];
@@ -45,42 +45,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="assets/theme.css">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Login</title>
-  <style>
-    :root {
-      --header: #1F6F78;
-      --bg: #F6F7F3;
-      --white: #FFFFFF;
-      --text-main: #1E2A2A;
-      --text-muted: #6F7F7D;
-      --sos: #C62828;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
-    body { height:100vh; background:var(--bg); display:flex; align-items:center; justify-content:center; }
-    .login-card { width:360px; background:var(--white); padding:30px; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,0.1); }
-    .login-card h2 { text-align:center; color:var(--header); margin-bottom:25px; }
-    .login-input { width:100%; padding:12px; margin-bottom:18px; border:1px solid var(--text-muted); border-radius:6px; font-size:14px; color:var(--text-main); }
-    .login-input:focus { outline:none; border-color:var(--header); }
-    .login-btn { width:100%; padding:12px; background:var(--header); color:var(--white); border:none; border-radius:6px; font-size:15px; cursor:pointer; }
-    .login-btn:hover { opacity:0.9; }
-    .error { color:var(--sos); text-align:center; font-size:13px; margin-bottom:10px; }
-  </style>
+  
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="auth">
   <div class="login-card">
-    <h2>Admin Login</h2>
+    <div class="login-hero">
+      <h1>TrustCare Admin Portal</h1>
+      <p>Secure access for TrustCare administrators.</p>
+      <p>Monitor safety, manage care teams, and respond faster.</p>
+    </div>
 
-    <?php if ($error): ?>
-      <div class="error"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+    <div class="login-form">
+      <h2>TrustCare Login</h2>
+      <p>Sign in to manage TrustCare operations.</p>
 
-    <form method="POST">
-      <input type="text" name="username" class="login-input" placeholder="Username" required/>
-      <input type="password" name="password" class="login-input" placeholder="Password" required/>
-      <button type="submit" class="login-btn">LOGIN</button>
-    </form>
+      <?php if ($error): ?>
+        <div class="error"><?= htmlspecialchars($error) ?></div>
+      <?php endif; ?>
+
+      <form method="POST">
+        <input type="text" name="username" class="login-input" placeholder="Username or Email" required/>
+        <input type="password" name="password" class="login-input" placeholder="Password" required/>
+        <button type="submit" class="login-btn">Sign In</button>
+      </form>
+    </div>
   </div>
 </body>
 </html>

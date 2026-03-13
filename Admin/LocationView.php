@@ -1,5 +1,5 @@
 <?php
-// Dummy location data
+
 $locations = [
     1 => [
         'name' => 'Kamal Silva',
@@ -20,7 +20,7 @@ $locations = [
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if (!isset($locations[$id])) {
-    echo "Location not found!";
+    echo "<div class='card' style='max-width:520px; margin:40px auto; text-align:center;'>Location not found!</div>";
     exit;
 }
 
@@ -30,94 +30,34 @@ $location = $locations[$id];
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/theme.css">
 <meta charset="UTF-8">
 <title>Location View</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-:root {
-  --bg: #F6F7F3;
-  --card: #FFFFFF;
-  --text-main: #1E2A2A;
-  --text-muted: #6F7F7D;
-  --checkins: #D6EFE6;
-  --sos: #C62828;
-}
 
-* { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
-
-body {
-  background: var(--bg);
-  display: flex;
-  justify-content: center;
-  padding: 40px 0;
-}
-
-.card {
-  background: var(--card);
-  width: 650px;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: var(--text-main);
-}
-
-label {
-  display: block;
-  margin: 15px 0 5px;
-  font-weight: bold;
-  color: var(--text-main);
-}
-
-input {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-.map-container {
-  margin-top: 20px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-iframe {
-  width: 100%;
-  height: 300px;
-  border: 0;
-}
-
-.buttons {
-  margin-top: 25px;
-  text-align: center;
-}
-
-.buttons button {
-  padding: 10px 20px;
-  margin: 0 10px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.update-btn { background: var(--checkins); }
-.delete-btn { background: var(--sos); color:#fff; }
-.cancel-btn { background: #ccc; }
-
-</style>
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn active" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="card">
-  <h1>Location View</h1>
+  <div class="content">
+    <div class="card">
+      <h1>Location View</h1>
 
   <form>
 
@@ -138,7 +78,7 @@ iframe {
     <label>Last Updated</label>
     <input type="text" value="<?= $location['last_updated'] ?>" readonly>
 
-    <!-- MAP -->
+    
     <div class="map-container">
       <iframe id="mapFrame"
         src="https://maps.google.com/maps?q=<?= urlencode($location['address']) ?>&output=embed">
@@ -152,7 +92,8 @@ iframe {
     </div>
 
   </form>
-</div>
+    </div>
+  </div>
 
 <script>
 function updateMap() {

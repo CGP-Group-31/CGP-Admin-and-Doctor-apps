@@ -13,17 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // 1. Verify Email uniqueness
+        
         $checkEmail = $pdo->prepare("SELECT UserID FROM Users WHERE Email = ?");
         $checkEmail->execute([$_POST['email']]);
         if ($checkEmail->fetch()) {
             throw new Exception("This email is already registered.");
         }
 
-        /** * 2. Insert into Users Table 
-         * UPDATED: Changed 'Password' to 'PasswordHash' 
-         * UPDATED: Added Gender and DateOfBirth to match your screenshot
-         */
+        
         $queryUser = "INSERT INTO Users (FullName, Phone, Email, PasswordHash, RoleID, Gender, DateOfBirth, IsActive, CreatedAt) 
                       VALUES (?, ?, ?, ?, 2, ?, ?, 1, GETDATE())";
         
@@ -41,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         $newUserID = $pdo->lastInsertId();
 
-        // 3. Insert into Doctor Table (Confirmed columns: DoctorID, LicenseNumber, Specialization, Hospital)
+        
         $stmtDoc = $pdo->prepare("INSERT INTO Doctor (DoctorID, LicenseNumber, Specialization, Hospital) VALUES (?, ?, ?, ?)");
         $stmtDoc->execute([
             $newUserID, 
@@ -62,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <?php if($error_msg): ?>
-    <div style="background: #C62828; color: white; padding: 15px; margin: 20px; border-radius: 8px; font-weight: bold; text-align: center;">
+    <div class="error">
         <i class="fas fa-exclamation-circle"></i> Error: <?= htmlspecialchars($error_msg) ?>
     </div>
 <?php endif; ?>
@@ -71,38 +68,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Doctor | Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --sidebar: #1F6F78; --bg: #F6F7F3; --accent: #E6B450; }
-        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 40px; }
-        
-        .form-card { background: white; width: 100%; max-width: 700px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
-        .form-header { background: var(--sidebar); color: white; padding: 30px; text-align: center; }
-        .form-body { padding: 40px; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .section-title { grid-column: span 2; margin-top: 20px; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0; color: var(--sidebar); font-weight: bold; text-transform: uppercase; font-size: 13px; }
-        
-        label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #555; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--sidebar); box-shadow: 0 0 0 3px rgba(31, 111, 120, 0.1); }
-
-        .btn-group { margin-top: 40px; display: flex; gap: 15px; }
-        .btn { flex: 1; padding: 15px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; transition: 0.3s; }
-        .btn-save { background: var(--sidebar); color: white; }
-        .btn-cancel { background: #eee; color: #333; }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-    </style>
+    <link rel="stylesheet" href="assets/theme.css">
+    
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn active" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="form-card">
-    <div class="form-header">
-        <i class="fas fa-user-md fa-3x"></i>
-        <h2 style="margin-top:10px;">Register New Doctor</h2>
-        <p style="opacity:0.8;">Create a medical profile and system credentials</p>
-    </div>
+  <div class="content">
+    <div class="form-card">
+        <div class="form-header">
+            <i class="fas fa-user-md fa-3x"></i>
+            <h2 class="form-title">Register New Doctor</h2>
+            <p class="text-soft">Create a medical profile and system credentials</p>
+        </div>
 
     <form class="form-body" method="POST">
         <div class="grid">
@@ -151,7 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn btn-save">Create Doctor Account</button>
         </div>
     </form>
-</div>
+    </div>
+  </div>
 
 </body>
 </html>

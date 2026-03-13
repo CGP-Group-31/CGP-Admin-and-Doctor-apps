@@ -60,7 +60,7 @@ try {
     $stmt->execute([$id]);
     $caregiver = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$caregiver) {
-        die("<div style='text-align:center; padding:50px;'><h2>Caregiver not found!</h2><a href='Caregivers.php'>Go Back</a></div>");
+        die("<div class='card' style='max-width:520px; margin:40px auto; text-align:center;'><h2>Caregiver not found!</h2><a href='Caregivers.php' class='text-primary'>Go Back</a></div>");
     }
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
@@ -74,28 +74,29 @@ try {
   <title>Admin | View Caregiver</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    :root { --sidebar: #1F6F78; --bg: #F6F7F3; --card: #FFFFFF; --text-main: #1E2A2A; --text-muted: #6F7F7D; --sos: #C62828; }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-    body { background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-    .card { background: var(--card); width: 100%; max-width: 550px; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-    h1 { color: var(--sidebar); text-align: center; margin-bottom: 10px; font-size: 24px; }
-    .subtitle { text-align: center; color: var(--text-muted); margin-bottom: 30px; font-size: 14px; }
-    label { display: block; margin: 15px 0 5px; color: var(--text-main); font-weight: 600; font-size: 14px; }
-    input, select { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; margin-bottom: 10px; }
-    .readonly-field { background-color: #f9f9f9; color: #777; cursor: not-allowed; }
-    .buttons { margin-top: 35px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .btn { padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
-    .update-btn { background: var(--sidebar); color: #fff; grid-column: span 2; }
-    .delete-btn { background: #fee2e2; color: var(--sos); }
-    .cancel-btn { background: #eee; color: #555; }
-    .error-msg { background: #fee2e2; color: var(--sos); padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
-  </style>
+    <link rel="stylesheet" href="assets/theme.css">
+  
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn active" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-  <div class="card">
-    <h1>Caregiver Profile</h1>
+  <div class="content">
+    <div class="card">
+      <h1>Caregiver Profile</h1>
 
 
     <?php if(isset($error)): ?>
@@ -129,6 +130,7 @@ try {
         <a href="Caregivers.php" class="btn cancel-btn">Cancel</a>
       </div>
     </form>
+    </div>
   </div>
 
   <script>

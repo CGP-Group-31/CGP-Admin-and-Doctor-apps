@@ -65,10 +65,10 @@ $stmt->execute([$id]);
 $doctor = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$doctor) {
-    die("<div style='text-align:center; padding:50px; font-family:sans-serif;'>
+    die("<div class='card' style='max-width:520px; margin:40px auto; text-align:center;'>
             <h2>Doctor Not Found</h2>
             <p>Could not find a record for ID #$id.</p>
-            <a href='Doctors.php'>Return to Directory</a>
+            <a href='Doctors.php' class='text-primary'>Return to Directory</a>
          </div>");
 }
 ?>
@@ -76,26 +76,33 @@ if (!$doctor) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/theme.css">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Doctor Profile</title>
-    <style>
-        :root { --primary: #1F6F78; --bg: #F6F7F3; --danger: #C62828; }
-        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 40px; }
-        .card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h2 { color: var(--primary); text-align: center; margin-bottom: 25px; }
-        label { display: block; margin-top: 15px; font-weight: bold; font-size: 13px; color: #555; }
-        input { width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        .btn-group { display: flex; gap: 10px; margin-top: 30px; }
-        .btn { flex: 1; padding: 13px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; }
-        .save { background: #D6EFE6; color: #1E2A2A; }
-        .delete { background: var(--danger); color: white; }
-        .back { background: #eee; color: #333; }
-    </style>
+    
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn active" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="card">
-    <h2>Doctor Profile #<?= $id ?></h2>
+  <div class="content">
+    <div class="card">
+      <h2>Doctor Profile 
     
     <form method="POST">
         <label>Full Name</label>
@@ -115,11 +122,12 @@ if (!$doctor) {
 
         <div class="btn-group">
             <button type="submit" name="update" class="btn save">Save Changes</button>
-            <button type="button" class="btn delete" onclick="deleteDoc()">Delete</button>
+            <button type="button" class="btn delete-btn" onclick="deleteDoc()">Delete</button>
             <a href="Doctors.php" class="btn back">Back</a>
         </div>
     </form>
-</div>
+    </div>
+  </div>
 
 <script>
 function deleteDoc() {

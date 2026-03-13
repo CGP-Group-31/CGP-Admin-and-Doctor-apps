@@ -22,7 +22,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && $id > 0) {
     }
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     try {
         $type = $_POST['relationship_type'];
@@ -56,10 +55,10 @@ try {
     $link = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$link) {
-        die("<div style='text-align:center; padding:50px; font-family:sans-serif;'>
+        die("<div class='card' style='max-width:520px; margin:40px auto; text-align:center;'>
                 <h2>Assignment Not Found</h2>
                 <p>The Relationship ID #$id does not exist.</p>
-                <a href='CaregiverLinks.php'>Back to List</a>
+                <a href='CaregiverLinks.php' class='text-primary'>Back to List</a>
              </div>");
     }
 } catch (PDOException $e) {
@@ -71,61 +70,76 @@ try {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Assignment Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --sidebar: #1F6F78; --bg: #F6F7F3; --danger: #C62828; }
-        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 40px; }
-        .card { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header i { font-size: 3rem; color: var(--sidebar); }
-        
-        .detail-group { background: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        .row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .label { font-weight: bold; color: #666; font-size: 14px; }
-        .val { font-weight: 600; color: #333; }
-
-        label { display: block; margin-top: 15px; font-weight: bold; font-size: 14px; }
-        input[type="text"] { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; }
-        .check-group { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
-
-        .btn-group { display: flex; gap: 10px; margin-top: 30px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
-        .save { background: #D6EFE6; color: #1E2A2A; }
-        .delete { background: var(--danger); color: white; }
-        .back { background: #eee; color: #333; }
-    </style>
+    <link rel="stylesheet" href="assets/theme.css">
+    
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn active" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="card">
-    <div class="header">
-        <i class="fas fa-link"></i>
-        <h2>Assignment Details</h2>
-    </div>
-
-    <div class="detail-group">
-        <div class="row"><span class="label">Elder:</span> <span class="val"><?= htmlspecialchars($link['ElderName']) ?></span></div>
-        <div class="row"><span class="label">Caregiver:</span> <span class="val"><?= htmlspecialchars($link['CaregiverName']) ?></span></div>
-        <div class="row"><span class="label">Phone:</span> <span class="val"><?= htmlspecialchars($link['CaregiverPhone']) ?></span></div>
-    </div>
-
-    <form method="POST">
-        <label>Relationship Type</label>
-        <input type="text" name="relationship_type" value="<?= htmlspecialchars($link['RelationshipType']) ?>">
-
-        <div class="check-group">
-            <input type="checkbox" name="is_primary" id="pri" <?= $link['IsPrimary'] ? 'checked' : '' ?>>
-            <label for="pri" style="margin:0;">Set as Primary Caregiver</label>
+  <div class="content">
+    <div class="card">
+      <div class="header-flex">
+        <div class="header-left">
+          <div class="header">
+            <i class="fas fa-link"></i>
+            <h2>Assignment Details</h2>
+          </div>
+          <p class="text-muted">Review caregiver pairing and update relationship settings.</p>
         </div>
+        <span class="badge"><?= $link['IsPrimary'] ? 'Primary Caregiver' : 'Secondary Caregiver' ?></span>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-card">
+          <span class="label">Elder</span>
+          <span class="val"><?= htmlspecialchars($link['ElderName']) ?></span>
+        </div>
+        <div class="detail-card">
+          <span class="label">Caregiver</span>
+          <span class="val"><?= htmlspecialchars($link['CaregiverName']) ?></span>
+        </div>
+        <div class="detail-card">
+          <span class="label">Phone</span>
+          <span class="val"><?= htmlspecialchars($link['CaregiverPhone']) ?></span>
+        </div>
+      </div>
+
+      <form method="POST" class="form-section">
+        <div class="input-group">
+          <label>Relationship Type</label>
+          <input type="text" name="relationship_type" value="<?= htmlspecialchars($link['RelationshipType']) ?>">
+        </div>
+
+        <label class="check-pill">
+          <input type="checkbox" name="is_primary" <?= $link['IsPrimary'] ? 'checked' : '' ?>>
+          <span>Set as Primary Caregiver</span>
+        </label>
 
         <div class="btn-group">
-            <button type="submit" name="update" class="btn save">Save Changes</button>
-            <button type="button" class="btn delete" onclick="confirmDelete()">Remove Link</button>
-            <a href="CaregiverLinks.php" class="btn back">Back</a>
+          <button type="submit" name="update" class="btn save">Save Changes</button>
+          <button type="button" class="btn delete-btn" onclick="confirmDelete()">Remove Link</button>
+          <a href="CaregiverLinks.php" class="btn back">Back</a>
         </div>
-    </form>
-</div>
+      </form>
+    </div>
+  </div>
 
 <script>
 function confirmDelete() {

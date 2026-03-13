@@ -71,7 +71,7 @@ $stmt->execute([$id]);
 $elder = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$elder) {
-    die("Elder not found in database.");
+    die("<div class='card' style='max-width:520px; margin:40px auto; text-align:center;'>Elder not found in database.</div>");
 }
 ?>
 
@@ -79,26 +79,32 @@ if (!$elder) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Elder</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --sidebar: #1F6F78; --bg: #F6F7F3; --card: #FFFFFF; --sos: #C62828; --checkins: #D6EFE6; }
-        body { background: var(--bg); display: flex; justify-content: center; padding: 40px; font-family: 'Segoe UI', sans-serif; }
-        .card { background: var(--card); width: 600px; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: var(--sidebar); margin-bottom: 20px; }
-        label { display: block; margin-top: 15px; font-weight: bold; color: #444; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; margin-top: 5px; box-sizing: border-box; }
-        .buttons { margin-top: 30px; display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
-        .update-btn { background: var(--checkins); color: #1E2A2A; }
-        .delete-btn { background: var(--sos); color: #fff; }
-        .cancel-btn { background: #eee; color: #333; }
-    </style>
+    <link rel="stylesheet" href="assets/theme.css">
+    
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn active" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="card">
-    <h2>Elder Profile</h2>
+  <div class="content">
+    <div class="card">
+      <h2>Elder Profile</h2>
     
     <form method="POST">
         <label>Full Name</label>
@@ -129,7 +135,8 @@ if (!$elder) {
             <a href="Elders.php" class="btn cancel-btn">Cancel</a>
         </div>
     </form>
-</div>
+    </div>
+  </div>
 
 <script>
 function confirmDeletion() {

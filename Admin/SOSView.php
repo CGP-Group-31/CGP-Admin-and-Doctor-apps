@@ -10,20 +10,22 @@ if (!isset($_SESSION['admin_id'])) {
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 try {
+    
     $query = "
         SELECT 
             S.SOSID,
+            S.TriggeredAt,
             U.FullName AS ElderName,
             U.Phone AS ElderPhone,
-            CASE 
-                WHEN S.TriggerTypeID = 1 THEN 'Panic Button'
-                WHEN S.TriggerTypeID = 2 THEN 'Fall Detected'
-                WHEN S.TriggerTypeID = 3 THEN 'Medical Alert'
-                ELSE 'Unknown'
-            END AS SOSType,
-            S.TriggeredAt
+            LT.Latitude,
+            LT.Longitude
         FROM SOSLogs S
         JOIN Users U ON S.ElderID = U.UserID
+        LEFT JOIN (
+            SELECT ElderID, Latitude, Longitude, 
+                   ROW_NUMBER() OVER (PARTITION BY ElderID ORDER BY RecordedAt DESC) as rn
+            FROM LocationTrack
+        ) LT ON S.ElderID = LT.ElderID AND LT.rn = 1
         WHERE S.SOSID = ?";
         
     $stmt = $pdo->prepare($query);
@@ -31,13 +33,13 @@ try {
     $alert = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$alert) {
-        die("<div style='text-align:center; padding:50px; font-family:sans-serif;'>
-                <h2>SOS Case Not Found</h2>
-                <a href='SOS.php'>Return to Logs</a>
+        die("<div style='text-align:center; padding:100px; font-family:sans-serif;'>
+                <i class='fas fa-search text-muted' style='font-size:3rem;'></i>
+                <h2>Case #$id Not Found</h2>
+                <a href='SOS.php' class='text-primary'>Return to Logs</a>
              </div>");
     }
 } catch (PDOException $e) {
-    
     die("Database Error: " . $e->getMessage());
 }
 ?>
@@ -46,78 +48,94 @@ try {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SOS Incident Report | #<?= $id ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Report | #<?= $id ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --sidebar: #1F6F78; --bg: #F6F7F3; --sos: #C62828; --text: #1E2A2A; }
-        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 40px; margin: 0; }
-        .report-container { background: white; width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
-        .report-header { background: var(--sos); color: white; padding: 30px; text-align: center; }
-        .report-header i { font-size: 3rem; margin-bottom: 10px; }
-        .report-header h2 { margin: 0; text-transform: uppercase; letter-spacing: 2px; }
-        .report-body { padding: 30px; }
-        .section-title { font-size: 12px; text-transform: uppercase; color: #888; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-        .info-item label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; }
-        .info-item span { font-size: 16px; font-weight: 600; color: var(--text); }
-        .description-box { background: #fff9f9; border-left: 4px solid var(--sos); padding: 20px; border-radius: 4px; margin-bottom: 30px; }
-        .description-box p { margin: 0; line-height: 1.6; color: #444; }
-        .footer-btns { display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
-        .btn-back { background: #eee; color: #333; }
-        .btn-print { background: var(--sidebar); color: white; }
-    </style>
+    <link rel="stylesheet" href="assets/theme.css">
+    
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn active" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="report-container">
+  <div class="content">
+    <div class="report-card">
     <div class="report-header">
-        <i class="fas fa-exclamation-triangle"></i>
-        <h2>Emergency Incident Report</h2>
-        <p>Case ID: #<?= $alert['SOSID'] ?></p>
+        <div class="header-left">
+            <h2>Incident Report</h2>
+            <p>Reference Log: #<?= $alert['SOSID'] ?></p>
+        </div>
+        <div class="status-badge">EMERGENCY ACTIVE</div>
     </div>
 
     <div class="report-body">
-        <div class="section-title">Elder Information</div>
-        <div class="info-grid">
-            <div class="info-item">
-                <label>Name</label>
-                <span><?= htmlspecialchars($alert['ElderName']) ?></span>
-            </div>
-            <div class="info-item">
-                <label>Contact Number</label>
-                <span><?= htmlspecialchars($alert['ElderPhone']) ?></span>
-            </div>
-        </div>
-
-        <div class="section-title">Incident Details</div>
-        <div class="info-grid">
-            <div class="info-item">
-                <label>Trigger Type</label>
-                <span style="color: var(--sos);"><?= htmlspecialchars($alert['SOSType']) ?></span>
-            </div>
-            <div class="info-item">
-                <label>Time of Trigger</label>
-                <span><?= date('h:i:s A | M d, Y', strtotime($alert['TriggeredAt'])) ?></span>
+        <div class="section">
+            <div class="section-title">Elder Subject Details</div>
+            <div class="data-grid">
+                <div class="data-item">
+                    <label>Full Name</label>
+                    <p><?= htmlspecialchars($alert['ElderName']) ?></p>
+                </div>
+                <div class="data-item">
+                    <label>Contact Number</label>
+                    <p><?= htmlspecialchars($alert['ElderPhone'] ?? 'Not Provided') ?></p>
+                </div>
             </div>
         </div>
 
-        <div class="section-title">Narrative Summary</div>
-        <div class="description-box">
-            <p>
-                At <strong><?= date('H:i', strtotime($alert['TriggeredAt'])) ?></strong>, an emergency signal was received 
-                for <strong><?= htmlspecialchars($alert['ElderName']) ?></strong>. The alert was classified as 
-                a <strong><?= htmlspecialchars($alert['SOSType']) ?></strong>. 
-                This report serves as a formal log of the emergency trigger event.
-            </p>
+        <div class="section">
+            <div class="section-title">Incident Timestamp</div>
+            <div class="data-grid">
+                <div class="data-item">
+                    <label>Date Received</label>
+                    <p><?= date('F d, Y', strtotime($alert['TriggeredAt'])) ?></p>
+                </div>
+                <div class="data-item">
+                    <label>Exact Time (Local)</label>
+                    <p><?= date('h:i:s A', strtotime($alert['TriggeredAt'])) ?></p>
+                </div>
+            </div>
         </div>
 
-        <div class="footer-btns">
-            <a href="SOS.php" class="btn btn-back">Return to Logs</a>
-            <button onclick="window.print()" class="btn btn-print"><i class="fas fa-print"></i> Print Report</button>
+        <div class="section">
+            <div class="section-title">Last Known Geolocation</div>
+            <div class="gps-container">
+                <div class="gps-info">
+                    <i class="fas fa-location-crosshairs"></i>
+                    <?php if ($alert['Latitude']): ?>
+                        <strong><?= $alert['Latitude'] ?>, <?= $alert['Longitude'] ?></strong>
+                    <?php else: ?>
+                        <span class="text-muted">No GPS coordinates available for this log.</span>
+                    <?php endif; ?>
+                </div>
+                <?php if ($alert['Latitude']): ?>
+                    <a href="https://www.google.com/maps?q=<?= $alert['Latitude'] ?>,<?= $alert['Longitude'] ?>" target="_blank" class="btn-map">
+                        <i class="fas fa-map"></i> Open Maps
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="actions">
+        <a href="SOS.php" class="btn btn-secondary">Back to Emergency Center</a>
+        <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Download PDF Report</button>
+    </div>
+    </div>
+  </div>
 
 </body>
 </html>

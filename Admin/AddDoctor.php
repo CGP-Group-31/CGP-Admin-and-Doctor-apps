@@ -1,67 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/theme.css">
 <title>Add Doctor</title>
-<style>
-body {
-  background: #F6F7F3;
-  font-family: Arial;
-  display: flex;
-  justify-content: center;
-  padding: 40px 0;
-}
 
-.card {
-  background: white;
-  width: 600px;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #1E2A2A;
-}
-
-label {
-  display: block;
-  margin-top: 15px;
-  font-weight: bold;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.buttons {
-  text-align: center;
-  margin-top: 25px;
-}
-
-button {
-  padding: 10px 20px;
-  margin: 0 8px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.save { background: #1F6F78; color: white; }
-.cancel { background: #ccc; }
-
-</style>
+    <script src="assets/app.js" defer></script>
 </head>
 
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn active" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="card">
-<h1>Add New Doctor</h1>
+  <div class="content">
+    <div class="card">
+      <h1>Add New Doctor</h1>
 
 <form>
   <label>Doctor Name</label>
@@ -82,7 +48,8 @@ button {
   </div>
 </form>
 
-</div>
+    </div>
+  </div>
 
 </body>
 </html>

@@ -35,70 +35,17 @@ try {
   <title>Admin | Complaints Management</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/theme.css">
 
-  <style>
-    :root {
-      --sidebar: #1F6F78;
-      --bg: #F6F7F3;
-      --card: #FFFFFF;
-      --text-main: #1E2A2A;
-      --text-muted: #6F7F7D;
-      --checkins: #D6EFE6;
-      --sos: #C62828;
-      --warning: #E6B450;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-
-    body { display: flex; min-height: 100vh; background: var(--bg); }
-
-
-    .sidebar { width: 240px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; position: fixed; height: 100vh; }
-    .sidebar h2 { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 1.2rem; }
-    .nav-btn { padding: 14px 20px; text-decoration: none; color: #fff; font-size: 14px; display: flex; align-items: center; transition: 0.3s; }
-    .nav-btn i { margin-right: 10px; width: 20px; text-align: center; }
-    .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.15); border-left: 4px solid var(--warning); }
-    .logout { margin-top: auto; background: var(--sos); text-align: center; font-weight: bold; }
-    .content { flex: 1; margin-left: 240px; padding: 40px; }
-h1 { 
-    color: var(--sidebar); 
-    margin-bottom: 20px; 
-    font-size: 2rem; 
-    font-weight: 700;
-}
-    .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
-
- 
-    .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
-    th { background: #f8fafb; color: var(--text-muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-
-
-    .status-badge { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
-    .status-pending { background: #fff3e0; color: #ef6c00; }
-    .status-resolved { background: #e8f5e9; color: #2e7d32; }
-    .status-review { background: #e3f2fd; color: #1976d2; }
-
-    .action-btn { 
-        padding: 8px 14px; 
-        background: var(--checkins); 
-        color: var(--text-main); 
-        text-decoration: none; 
-        border-radius: 6px; 
-        font-size: 12px; 
-        font-weight: 600;
-        transition: 0.2s;
-    }
-    .action-btn:hover { background: #bfe5d7; }
-  </style>
+  
+    <script src="assets/app.js" defer></script>
 </head>
 
-<body>
+<body class="app">
 
   <div class="sidebar">
-    <h2>ELDERCARE</h2>
-    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-th-large"></i> Dashboard</a>
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a>
     <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> Caregivers</a>
     <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> Elders</a>
     <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> Doctors</a>
@@ -108,7 +55,7 @@ h1 {
     <a class="nav-btn active" href="Complains.php"><i class="fas fa-exclamation-circle"></i> Complains</a>
     <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> Location</a>
     <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
-    <a class="nav-btn logout" href="Login.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
 
   <div class="content">

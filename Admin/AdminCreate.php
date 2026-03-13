@@ -2,7 +2,7 @@
 session_start();
 require 'include/db.php';
 
-// Access Control
+
 if (!isset($_SESSION['admin_id'])) {
     header("Location: Login.php");
     exit;
@@ -15,15 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // 1. Check if Email exists
+        
         $check = $pdo->prepare("SELECT UserID FROM Users WHERE Email = ?");
         $check->execute([$_POST['email']]);
         if ($check->fetch()) {
             throw new Exception("This email is already registered to another administrator.");
         }
 
-        // 2. Insert into Users table as Admin (RoleID = 1)
-        // Using 'PasswordHash' as per your database schema
+        
+        
         $sql = "INSERT INTO Users (FullName, Email, Phone, PasswordHash, RoleID, IsActive, CreatedAt) 
                 VALUES (?, ?, ?, ?, 1, 1, GETDATE())";
         
@@ -50,59 +50,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Admin | Eldercare</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Admin | TrustCare</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { 
-            --primary: #2E7D7A; 
-            --bg: #F4F5F0; 
-            --wellbeing: #BEE8DA; 
-            --text-dark: #243333; 
-            --text-muted: #6F7F7D;
-            --sos: #C62828;
-        }
-
-        body { background: var(--bg); color: var(--text-dark); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        
-        .form-card { background: #FFFFFF; width: 100%; max-width: 500px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); overflow: hidden; }
-        
-        .form-header { background: var(--primary); color: white; padding: 30px; text-align: center; }
-        .form-header i { font-size: 40px; margin-bottom: 10px; }
-        
-        .form-body { padding: 35px; }
-        
-        .msg { padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; text-align: center; font-weight: 600; }
-        .error { background: #FEE2E2; color: var(--sos); border: 1px solid #FCA5A5; }
-        .success { background: var(--wellbeing); color: var(--primary); border: 1px solid var(--primary); }
-
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-        
-        input { 
-            width: 100%; padding: 12px; border: 1px solid #CFEDE2; border-radius: 8px; outline: none; 
-            background: #FAFAFA; color: var(--text-dark); box-sizing: border-box; transition: 0.3s; 
-        }
-        
-        input:focus { border-color: var(--primary); background: #FFF; box-shadow: 0 0 0 3px rgba(46, 125, 122, 0.1); }
-
-        .btn-group { margin-top: 30px; display: flex; gap: 12px; }
-        
-        .btn { flex: 1; padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; transition: 0.3s; font-size: 14px; }
-        
-        .btn-save { background: var(--primary); color: white; }
-        .btn-cancel { background: #EEE; color: var(--text-muted); }
-        
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    </style>
+    <link rel="stylesheet" href="assets/theme.css">
+    
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn active" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="form-card">
-    <div class="form-header">
-        <i class="fas fa-user-shield"></i>
-        <h2>Add Administrator</h2>
-        <p style="font-size: 13px; opacity: 0.8; margin: 5px 0 0 0;">Grant system access to new staff</p>
-    </div>
+  <div class="content">
+    <div class="form-card">
+        <div class="form-header">
+            <i class="fas fa-user-shield"></i>
+            <h2>Add Administrator</h2>
+            <p class="text-soft" style="font-size: 13px; margin: 5px 0 0 0;">Grant system access to new staff</p>
+        </div>
 
     <form class="form-body" method="POST">
         <?php if($error_msg): ?>
@@ -139,7 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn btn-save">Create Admin</button>
         </div>
     </form>
-</div>
+    </div>
+  </div>
 
 </body>
 </html>

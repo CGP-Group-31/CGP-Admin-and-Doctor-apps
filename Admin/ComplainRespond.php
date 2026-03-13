@@ -12,7 +12,7 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_response'])) {
     try {
         $newStatus = $_POST['status'];
-        // Update the status in the database
+        
         $stmt = $pdo->prepare("UPDATE Complaints SET Status = ? WHERE ComplaintID = ?");
         $stmt->execute([$newStatus, $id]);
         
@@ -38,7 +38,7 @@ try {
     $complain = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$complain) {
-        die("<div style='text-align:center; padding:500px; font-family:sans-serif;'><h2>Complaint Not Found</h2><a href='Complains.php'>Return to List</a></div>");
+        die("<div class='card' style='max-width:520px; margin:40px auto; text-align:center;'><h2>Complaint Not Found</h2><a href='Complains.php' class='text-primary'>Return to List</a></div>");
     }
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
@@ -49,43 +49,31 @@ try {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Respond to Complaint #<?= $id ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --sidebar: #1F6F78; --bg: #F6F7F3; --white: #FFFFFF; --text: #1E2A2A; --muted: #6F7F7D; --warning: #E6B450; }
-        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 40px; margin: 0; }
-        
-        .respond-card { background: var(--white); width: 100%; max-width: 700px; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); overflow: hidden; }
-        
-        .top-bar { background: var(--sidebar); color: white; padding: 30px; position: relative; }
-        .top-bar h2 { margin: 0; font-size: 1.5rem; }
-        .case-id { position: absolute; right: 30px; top: 35px; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-
-        .content-body { padding: 40px; }
-        .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: var(--sidebar); font-weight: bold; font-size: 14px; text-transform: uppercase; }
-        
-        .original-message { background: #f0f4f4; border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 5px solid var(--warning); }
-        .subject-line { font-weight: 800; font-size: 18px; margin-bottom: 10px; color: var(--text); }
-        .message-body { color: #444; line-height: 1.7; font-size: 15px; }
-
-        .meta-info { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; background: #fafafa; padding: 15px; border-radius: 8px; }
-        .meta-item label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-        .meta-item span { font-weight: 600; font-size: 14px; }
-
-        form label { display: block; margin-top: 20px; font-weight: bold; font-size: 14px; color: var(--text); }
-        select, textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-        textarea { height: 120px; }
-
-        .actions { display: flex; gap: 15px; margin-top: 30px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; transition: 0.3s; }
-        .btn-submit { background: var(--sidebar); color: white; }
-        .btn-cancel { background: #eee; color: #333; }
-        .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
-    </style>
+    <link rel="stylesheet" href="assets/theme.css">
+    
+    <script src="assets/app.js" defer></script>
 </head>
-<body>
+<body class="app">
+  <div class="sidebar">
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn active" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
+    <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
 
-<div class="respond-card">
+  <div class="content">
+    <div class="respond-card">
     <div class="top-bar">
         <h2>Process Complaint</h2>
         <div class="case-id">TICKET #<?= $id ?></div>
@@ -137,7 +125,8 @@ try {
             </div>
         </form>
     </div>
-</div>
+    </div>
+  </div>
 
 </body>
 </html>

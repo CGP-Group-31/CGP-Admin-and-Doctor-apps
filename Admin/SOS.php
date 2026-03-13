@@ -8,20 +8,21 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 try {
+    
     $query = "
         SELECT 
             S.SOSID,
-            U.FullName AS ElderName,
-            CASE 
-                WHEN S.TriggerTypeID = 1 THEN 'Panic Button'
-                WHEN S.TriggerTypeID = 2 THEN 'Fall Detected'
-                WHEN S.TriggerTypeID = 3 THEN 'Medical Alert'
-                ELSE 'Unknown'
-            END AS SOSType,
             S.TriggeredAt,
-            'Active' as Status
+            U.FullName AS ElderName,
+            LT.Latitude,
+            LT.Longitude
         FROM SOSLogs S
         JOIN Users U ON S.ElderID = U.UserID
+        LEFT JOIN (
+            SELECT ElderID, Latitude, Longitude, 
+                   ROW_NUMBER() OVER (PARTITION BY ElderID ORDER BY RecordedAt DESC) as rn
+            FROM LocationTrack
+        ) LT ON S.ElderID = LT.ElderID AND LT.rn = 1
         ORDER BY S.TriggeredAt DESC";
         
     $stmt = $pdo->query($query);
@@ -35,120 +36,66 @@ try {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SOS & Emergency | Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-  <style>
-    :root {
-      --sidebar: #1F6F78;
-      --bg: #F6F7F3;
-      --card: #FFFFFF;
-      --text-main: #1E2A2A;
-      --text-muted: #6F7F7D;
-      --checkins: #D6EFE6;
-      --reminder: #E6B450;
-      --sos: #C62828;
-      --btn-color: var(--checkins);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-
-    body { display: flex; min-height: 100vh; background: var(--bg); }
-
-
-    .sidebar { width: 240px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; position: fixed; height: 100vh; }
-    .sidebar h2 { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); }
-    .nav-btn { padding: 14px 20px; text-decoration: none; color: #fff; font-size: 14px; display: flex; align-items: center; transition: 0.3s; }
-    .nav-btn i { margin-right: 10px; width: 20px; text-align: center; }
-    .nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.15); }
-    .logout { margin-top: auto; background: var(--sos); text-align: center; font-weight: bold; }
-
-
-    .content { flex: 1; margin-left: 240px; padding: 40px; }
-   h1 { 
-    color: var(--sidebar);
-    margin-bottom: 20px; 
-    font-size: 2rem; 
-    font-weight: 700;
-}
-    .subtitle { color: var(--text-muted); margin-bottom: 25px; font-size: 14px; }
-
-
-    .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; }
-    th { background: #f8fafb; color: var(--text-muted); text-transform: uppercase; font-size: 12px; }
-
-
-    .type-badge { font-weight: bold; color: var(--sos); display: flex; align-items: center; gap: 8px; }
-    .status-active { color: #2e7d32; font-weight: bold; background: #e8f5e9; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-
-    .action-btn { 
-        padding: 8px 16px; 
-        border: none; 
-        border-radius: 6px; 
-        cursor: pointer; 
-        font-size: 12px; 
-        background: var(--checkins); 
-        color: var(--text-main); 
-        text-decoration: none;
-        font-weight: 600;
-        transition: 0.2s;
-    }
-    .action-btn:hover { background: #bfe5d7; }
-  </style>
+    <link rel="stylesheet" href="assets/theme.css">
+  
+    <script src="assets/app.js" defer></script>
 </head>
-
-<body>
+<body class="app">
 
   <div class="sidebar">
-    <h2>ELDERCARE</h2>
-    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-th-large"></i> Dashboard</a>
-    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> Caregivers</a>
-    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> Elders</a>
-    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> Doctors</a>
-    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> Caregiver Links</a>
-    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> Health & AI</a>
-    <a class="nav-btn active" href="SOS.php"><i class="fas fa-ambulance"></i> SOS & Emergency</a>
-    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> Complains</a>
-    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> Location</a>
+    <h2>TRUSTCARE</h2>
+    <a class="nav-btn" href="Dashboard.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+    <a class="nav-btn" href="Caregivers.php"><i class="fas fa-user-nurse"></i> <span>Caregivers</span></a>
+    <a class="nav-btn" href="Elders.php"><i class="fas fa-blind"></i> <span>Elders</span></a>
+    <a class="nav-btn" href="Doctors.php"><i class="fas fa-user-md"></i> <span>Doctors</span></a>
+    <a class="nav-btn" href="CaregiverLinks.php"><i class="fas fa-link"></i> <span>Caregiver Links</span></a>
+    <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
+    <a class="nav-btn active" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
+    <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>    
+    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
     <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
-    <a class="nav-btn logout" href="Login.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
 
   <div class="content">
-    <h1>SOS & Emergency Logs</h1>
-    <br>
-
+    <h1>SOS</h1>
+    
     <div class="card">
       <table>
         <thead>
           <tr>
             <th>ID</th>
             <th>Elder Name</th>
-            <th>SOS Type</th>
-            <th>Time Triggered</th>
-            <th>Status</th>
+            <th>Last Known Location</th>
+            <th>Triggered Time</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <?php if (empty($alerts)): ?>
-            <tr><td colspan="6" style="text-align:center; padding: 30px;">No emergency logs found.</td></tr>
+            <tr><td colspan="5" style="text-align:center; padding: 30px;">No emergency records found.</td></tr>
           <?php else: ?>
             <?php foreach ($alerts as $row): ?>
             <tr>
-              <td><strong>#<?= $row['SOSID'] ?></strong></td>
-              <td><?= htmlspecialchars($row['ElderName']) ?></td>
-              <td class="type-badge">
-                <i class="fas fa-exclamation-circle"></i> 
-                <?= htmlspecialchars($row['SOSType']) ?>
-              </td>
-              <td><?= date('h:i A | M d', strtotime($row['TriggeredAt'])) ?></td>
-              <td><span class="status-active"><?= $row['Status'] ?></span></td>
+              <td><span class="id-badge">#<?= $row['SOSID'] ?></span></td>
+              <td><strong><?= htmlspecialchars($row['ElderName']) ?></strong></td>
               <td>
-                <a href="SOSView.php?id=<?= $row['SOSID'] ?>" class="action-btn">View Case</a>
+                <?php if ($row['Latitude']): ?>
+                    <a href="https://www.google.com/maps?q=<?= $row['Latitude'] ?>,<?= $row['Longitude'] ?>" target="_blank" class="location-box">
+                        <i class="fas fa-map-marker-alt"></i> <?= $row['Latitude'] ?>, <?= $row['Longitude'] ?>
+                    </a>
+                <?php else: ?>
+                    <span class="text-muted">No GPS Data</span>
+                <?php endif; ?>
+              </td>
+              <td class="time-text">
+                <i class="far fa-clock"></i> <?= date('h:i A | M d', strtotime($row['TriggeredAt'])) ?>
+              </td>
+              <td>
+                <a href="SOSView.php?id=<?= $row['SOSID'] ?>" class="text-primary link-strong">View Details</a>
               </td>
             </tr>
             <?php endforeach; ?>
