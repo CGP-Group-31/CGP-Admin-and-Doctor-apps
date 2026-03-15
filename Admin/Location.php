@@ -22,7 +22,7 @@ try {
                    ROW_NUMBER() OVER (PARTITION BY ElderID ORDER BY RecordedAt DESC) as rn
             FROM locationtrack
         ) lt ON u.UserID = lt.ElderID AND lt.rn = 1
-        WHERE u.RoleID NOT IN (1, 2, 4)
+        WHERE u.RoleID = 5
         ORDER BY u.FullName ASC";
         
     $stmt = $pdo->query($query);
