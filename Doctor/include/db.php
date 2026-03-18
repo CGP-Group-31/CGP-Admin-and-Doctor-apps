@@ -13,7 +13,7 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
     ]);
 } catch (PDOException $e) {
-    //log errors
+   
     error_log("Database connection failed." . $e->getMessage(), 0);
     die("Database connection failed. Please try again later.");
 }
