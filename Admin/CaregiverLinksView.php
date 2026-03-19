@@ -22,20 +22,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && $id > 0) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
-    try {
-        $type = $_POST['relationship_type'];
-        $isPrimary = isset($_POST['is_primary']) ? 1 : 0;
-
-        $stmt = $pdo->prepare("UPDATE careRelationships SET RelationshipType = ?, IsPrimary = ? WHERE RelationshipID = ?");
-        $stmt->execute([$type, $isPrimary, $id]);
-
-        echo "<script>alert('Link updated successfully'); window.location.href='CaregiverLinks.php';</script>";
-        exit;
-    } catch (PDOException $e) {
-        $error = "Update failed: " . $e->getMessage();
-    }
-}
+// Updates are disabled for relationship details.
 
 
 try {
@@ -88,20 +75,16 @@ try {
     <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
     <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
     <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
-    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
     <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
     <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
 
   <div class="content">
-    <div class="card">
-      <div class="header-flex">
-        <div class="header-left">
-          <div class="header">
-            <i class="fas fa-link"></i>
-            <h2>Assignment Details</h2>
-          </div>
-          <p class="text-muted">Review caregiver pairing and update relationship settings.</p>
+    <div class="card view-card">
+      <div class="view-header">
+        <div>
+          <h2 class="view-title">Assignment Details</h2>
+          <p class="view-subtitle">Caregiver pairing overview.</p>
         </div>
         <span class="badge"><?= $link['IsPrimary'] ? 'Primary Caregiver' : 'Secondary Caregiver' ?></span>
       </div>
@@ -124,18 +107,17 @@ try {
       <form method="POST" class="form-section">
         <div class="input-group">
           <label>Relationship Type</label>
-          <input type="text" name="relationship_type" value="<?= htmlspecialchars($link['RelationshipType']) ?>">
+          <input type="text" name="relationship_type" value="<?= htmlspecialchars($link['RelationshipType']) ?>" class="readonly-field" readonly>
         </div>
 
         <label class="check-pill">
-          <input type="checkbox" name="is_primary" <?= $link['IsPrimary'] ? 'checked' : '' ?>>
+          <input type="checkbox" name="is_primary" <?= $link['IsPrimary'] ? 'checked' : '' ?> disabled>
           <span>Set as Primary Caregiver</span>
         </label>
 
-        <div class="btn-group">
-          <button type="submit" name="update" class="btn save">Save Changes</button>
-          <button type="button" class="btn delete-btn" onclick="confirmDelete()">Remove Link</button>
+        <div class="view-actions">
           <a href="CaregiverLinks.php" class="btn back">Back</a>
+          <button type="button" class="btn delete-btn" onclick="confirmDelete()">Remove Link</button>
         </div>
       </form>
     </div>

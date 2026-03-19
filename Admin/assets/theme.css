@@ -358,6 +358,41 @@ button:hover,
   flex-wrap: wrap;
 }
 
+.btn-group .btn,
+.actions .btn,
+.buttons .btn,
+.btn-group .btn-view,
+.actions .btn-view,
+.buttons .btn-view,
+.btn-group .btn-action,
+.actions .btn-action,
+.buttons .btn-action {
+  min-width: 140px;
+  height: 44px;
+}
+
+.view-card { padding: 28px; }
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.view-title { margin: 0; font-size: 1.6rem; }
+.view-subtitle { margin: 4px 0 0; color: var(--text-muted); }
+.view-section { margin-top: 18px; }
+.view-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  padding-top: 16px;
+  margin-top: 18px;
+  border-top: 1px solid var(--bg-section);
+}
+.view-actions .btn { min-width: 160px; }
+
 .badge,
 .role-badge,
 .admin-badge,

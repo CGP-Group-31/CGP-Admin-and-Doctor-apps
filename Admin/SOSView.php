@@ -66,17 +66,16 @@ try {
     <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
     <a class="nav-btn active" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
     <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
-    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
     <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
     <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
 
   <div class="content">
-    <div class="report-card">
-    <div class="report-header">
-        <div class="header-left">
-            <h2>Incident Report</h2>
-            <p>Reference Log: #<?= $alert['SOSID'] ?></p>
+    <div class="report-card view-card">
+    <div class="view-header">
+        <div>
+            <h2 class="view-title">Incident Report</h2>
+            <p class="view-subtitle">Reference Log: #<?= $alert['SOSID'] ?></p>
         </div>
         <div class="status-badge">EMERGENCY ACTIVE</div>
     </div>
@@ -130,7 +129,7 @@ try {
         </div>
     </div>
 
-    <div class="actions">
+    <div class="view-actions">
         <a href="SOS.php" class="btn btn-secondary">Back to Emergency Center</a>
         <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Download PDF Report</button>
     </div>

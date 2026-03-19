@@ -39,29 +39,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && $id > 0) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
-    try {
-        $pdo->beginTransaction();
-
-        $stmt1 = $pdo->prepare("UPDATE Users SET FullName = ?, Email = ?, Phone = ? WHERE UserID = ?");
-        $stmt1->execute([$_POST['full_name'], $_POST['email'], $_POST['phone'], $id]);
-
-        $newCG = intval($_POST['caregiver_id']);
-        if ($newCG > 0) {
-
-            $pdo->prepare("DELETE FROM CareRelationships WHERE ElderID = ?")->execute([$id]);
-
-            $pdo->prepare("INSERT INTO CareRelationships (ElderID, CaregiverID) VALUES (?, ?)")->execute([$id, $newCG]);
-        }
-
-        $pdo->commit();
-        header("Location: Elders.php?msg=updated");
-        exit;
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $error = "Update Error: " . $e->getMessage();
-    }
-}
+// Updates are disabled for sensitive profile details.
 
 
 $caregiversList = $pdo->query("SELECT UserID, FullName FROM Users WHERE RoleID = 4")->fetchAll(PDO::FETCH_ASSOC);
@@ -97,42 +75,56 @@ if (!$elder) {
     <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
     <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
     <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
-    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
     <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
     <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
 
   <div class="content">
-    <div class="card">
-      <h2>Elder Profile</h2>
+    <div class="card view-card">
+      <div class="view-header">
+        <div>
+          <h2 class="view-title">Elder Profile</h2>
+          <p class="view-subtitle">Personal details and caregiver assignment.</p>
+        </div>
+        <span class="badge">Profile Locked</span>
+      </div>
     
-    <form method="POST">
-        <label>Full Name</label>
-        <input type="text" name="full_name" value="<?= htmlspecialchars($elder['FullName']) ?>" required>
+    <form method="POST" class="form-section">
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" name="full_name" value="<?= htmlspecialchars($elder['FullName']) ?>" class="readonly-field" readonly>
+        </div>
 
-        <label>Age (Visible)</label>
-        <input type="number" name="age" value="72">
+        <div class="input-group">
+          <label>Age</label>
+          <input type="text" value="Hidden" class="readonly-field" readonly>
+        </div>
 
-        <label>Assigned Caregiver</label>
-        <select name="caregiver_id">
-            <option value="0">-- Select New Caregiver --</option>
-            <?php foreach($caregiversList as $cg): ?>
-                <option value="<?= $cg['UserID'] ?>" <?= ($elder['CaregiverID'] == $cg['UserID']) ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($cg['FullName']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+        <div class="input-group">
+          <label>Assigned Caregiver</label>
+          <select name="caregiver_id" disabled>
+              <option value="0">-- Select New Caregiver --</option>
+              <?php foreach($caregiversList as $cg): ?>
+                  <option value="<?= $cg['UserID'] ?>" <?= ($elder['CaregiverID'] == $cg['UserID']) ? 'selected' : '' ?>>
+                      <?= htmlspecialchars($cg['FullName']) ?>
+                  </option>
+              <?php endforeach; ?>
+          </select>
+        </div>
 
-        <label>Phone Number</label>
-        <input type="text" name="phone" value="<?= htmlspecialchars($elder['Phone'] ?? '') ?>">
+        <div class="input-group">
+          <label>Phone Number</label>
+          <input type="text" name="phone" value="<?= htmlspecialchars($elder['Phone'] ?? '') ?>" class="readonly-field" readonly>
+        </div>
 
-        <label>Email Address</label>
-        <input type="email" name="email" value="<?= htmlspecialchars($elder['Email'] ?? '') ?>">
+        <div class="input-group">
+          <label>Email Address</label>
+          <input type="email" name="email" value="<?= htmlspecialchars($elder['Email'] ?? '') ?>" class="readonly-field" readonly>
+        </div>
 
-        <div class="buttons">
-            <button type="submit" name="update" class="btn update-btn">Save Changes</button>
+        <div class="view-actions">
+            <a href="Elders.php" class="btn cancel-btn">Back</a>
             <button type="button" class="btn delete-btn" onclick="confirmDeletion()">Delete Forever</button>
-            <a href="Elders.php" class="btn cancel-btn">Cancel</a>
         </div>
     </form>
     </div>

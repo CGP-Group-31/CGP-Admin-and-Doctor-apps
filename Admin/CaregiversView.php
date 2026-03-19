@@ -39,18 +39,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && $id > 0) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
-    try {
-        $status = ($_POST['status'] == 'Active') ? 1 : 0;
-        $updateQuery = "UPDATE Users SET FullName = ?, Phone = ?, Email = ?, IsActive = ? WHERE UserID = ? AND RoleID = 4";
-        $stmt = $pdo->prepare($updateQuery);
-        $stmt->execute([$_POST['full_name'], $_POST['phone'], $_POST['email'], $status, $id]);
-        header("Location: Caregivers.php?status=success");
-        exit;
-    } catch (PDOException $e) {
-        $error = "Update failed: " . $e->getMessage();
-    }
-}
+// Updates are disabled for sensitive profile details.
 
 
 try {
@@ -89,45 +78,61 @@ try {
     <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
     <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
     <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
-    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
     <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
     <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
 
   <div class="content">
-    <div class="card">
-      <h1>Caregiver Profile</h1>
+    <div class="card view-card">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">Caregiver Profile</h1>
+          <p class="view-subtitle">Profile details and assignment summary.</p>
+        </div>
+        <span class="badge <?= $caregiver['IsActive'] ? 'badge-active' : 'badge-inactive' ?>">
+          <?= $caregiver['IsActive'] ? 'Active' : 'Inactive' ?>
+        </span>
+      </div>
 
 
     <?php if(isset($error)): ?>
         <div class="error-msg"><?= $error ?></div>
     <?php endif; ?>
 
-    <form method="POST">
-      <label><i class="fas fa-user"></i> Full Name</label>
-      <input type="text" name="full_name" value="<?= htmlspecialchars($caregiver['FullName']) ?>" required>
+    <form method="POST" class="form-section">
+      <div class="input-group">
+        <label><i class="fas fa-user"></i> Full Name</label>
+        <input type="text" name="full_name" value="<?= htmlspecialchars($caregiver['FullName']) ?>" class="readonly-field" readonly>
+      </div>
 
-      <label><i class="fas fa-phone"></i> Phone Number</label>
-      <input type="text" name="phone" value="<?= htmlspecialchars($caregiver['Phone']) ?>">
+      <div class="input-group">
+        <label><i class="fas fa-phone"></i> Phone Number</label>
+        <input type="text" name="phone" value="<?= htmlspecialchars($caregiver['Phone']) ?>" class="readonly-field" readonly>
+      </div>
 
-      <label><i class="fas fa-envelope"></i> Email Address</label>
-      <input type="email" name="email" value="<?= htmlspecialchars($caregiver['Email']) ?>">
+      <div class="input-group">
+        <label><i class="fas fa-envelope"></i> Email Address</label>
+        <input type="email" name="email" value="<?= htmlspecialchars($caregiver['Email']) ?>" class="readonly-field" readonly>
+      </div>
 
-      <label><i class="fas fa-toggle-on"></i> Account Status</label>
-      <select name="status">
-        <option value="Active" <?= $caregiver['IsActive'] == 1 ? 'selected' : '' ?>>Active</option>
-        <option value="Inactive" <?= $caregiver['IsActive'] == 0 ? 'selected' : '' ?>>Inactive</option>
-      </select>
+      <div class="input-group">
+        <label><i class="fas fa-toggle-on"></i> Account Status</label>
+        <select name="status" disabled>
+          <option value="Active" <?= $caregiver['IsActive'] == 1 ? 'selected' : '' ?>>Active</option>
+          <option value="Inactive" <?= $caregiver['IsActive'] == 0 ? 'selected' : '' ?>>Inactive</option>
+        </select>
+      </div>
 
-      <label><i class="fas fa-users"></i> Assigned Elders (Count)</label>
-      <input type="text" class="readonly-field" value="<?= $caregiver['assigned_elders'] ?>" readonly>
+      <div class="input-group">
+        <label><i class="fas fa-users"></i> Assigned Elders (Count)</label>
+        <input type="text" class="readonly-field" value="<?= $caregiver['assigned_elders'] ?>" readonly>
+      </div>
 
-      <div class="buttons">
-        <button type="submit" name="update" class="btn update-btn">Save All Changes</button>
+      <div class="view-actions">
+        <a href="Caregivers.php" class="btn cancel-btn">Back</a>
         <button type="button" class="btn delete-btn" onclick="confirmDelete(<?= $caregiver['UserID'] ?>)">
             <i class="fas fa-trash"></i> Delete
         </button>
-        <a href="Caregivers.php" class="btn cancel-btn">Cancel</a>
       </div>
     </form>
     </div>

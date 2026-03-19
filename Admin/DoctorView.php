@@ -33,26 +33,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && $id > 0) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
-    try {
-        $pdo->beginTransaction();
-
- 
-        $stmt1 = $pdo->prepare("UPDATE Users SET FullName = ?, Phone = ? WHERE UserID = ?");
-        $stmt1->execute([$_POST['full_name'], $_POST['phone'], $id]);
-
- 
-        $stmt2 = $pdo->prepare("UPDATE Doctor SET LicenseNumber = ?, Specialization = ?, Hospital = ? WHERE DoctorID = ?");
-        $stmt2->execute([$_POST['license'], $_POST['specialization'], $_POST['hospital'], $id]);
-
-        $pdo->commit();
-        echo "<script>alert('Changes saved successfully'); window.location.href='Doctors.php';</script>";
-        exit;
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $error = "Update Error: " . $e->getMessage();
-    }
-}
+// Updates are disabled for sensitive profile details.
 
 
 $query = "
@@ -95,35 +76,49 @@ if (!$doctor) {
     <a class="nav-btn" href="HealthAI.php"><i class="fas fa-robot"></i> <span>Health & AI</span></a>
     <a class="nav-btn" href="SOS.php"><i class="fas fa-ambulance"></i> <span>SOS & Emergency</span></a>
     <a class="nav-btn" href="Complains.php"><i class="fas fa-exclamation-circle"></i> <span>Complains</span></a>
-    <a class="nav-btn" href="Location.php"><i class="fas fa-map-marker-alt"></i> <span>Location</span></a>
     <a class="nav-btn" href="Admins.php"><i class="fas fa-user-shield"></i> <span>Manage Admins</span></a>
     <a class="nav-btn logout" href="logout.php"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
   </div>
 
   <div class="content">
-    <div class="card">
-      <h2>Doctor Profile 
+    <div class="card view-card">
+      <div class="view-header">
+        <div>
+          <h2 class="view-title">Doctor Profile</h2>
+          <p class="view-subtitle">Professional details and credentials.</p>
+        </div>
+        <span class="badge">Profile Locked</span>
+      </div>
     
-    <form method="POST">
-        <label>Full Name</label>
-        <input type="text" name="full_name" value="<?= htmlspecialchars($doctor['FullName']) ?>" required>
+    <form method="POST" class="form-section">
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" name="full_name" value="<?= htmlspecialchars($doctor['FullName']) ?>" class="readonly-field" readonly>
+        </div>
 
-        <label>Medical License Number</label>
-        <input type="text" name="license" value="<?= htmlspecialchars($doctor['LicenseNumber']) ?>">
+        <div class="input-group">
+          <label>Medical License Number</label>
+          <input type="text" name="license" value="<?= htmlspecialchars($doctor['LicenseNumber']) ?>" class="readonly-field" readonly>
+        </div>
 
-        <label>Specialization</label>
-        <input type="text" name="specialization" value="<?= htmlspecialchars($doctor['Specialization']) ?>">
+        <div class="input-group">
+          <label>Specialization</label>
+          <input type="text" name="specialization" value="<?= htmlspecialchars($doctor['Specialization']) ?>" class="readonly-field" readonly>
+        </div>
 
-        <label>Hospital</label>
-        <input type="text" name="hospital" value="<?= htmlspecialchars($doctor['Hospital']) ?>">
+        <div class="input-group">
+          <label>Hospital</label>
+          <input type="text" name="hospital" value="<?= htmlspecialchars($doctor['Hospital']) ?>" class="readonly-field" readonly>
+        </div>
 
-        <label>Contact Number</label>
-        <input type="text" name="phone" value="<?= htmlspecialchars($doctor['Phone']) ?>">
+        <div class="input-group">
+          <label>Contact Number</label>
+          <input type="text" name="phone" value="<?= htmlspecialchars($doctor['Phone']) ?>" class="readonly-field" readonly>
+        </div>
 
-        <div class="btn-group">
-            <button type="submit" name="update" class="btn save">Save Changes</button>
-            <button type="button" class="btn delete-btn" onclick="deleteDoc()">Delete</button>
+        <div class="view-actions">
             <a href="Doctors.php" class="btn back">Back</a>
+            <button type="button" class="btn delete-btn" onclick="deleteDoc()">Delete</button>
         </div>
     </form>
     </div>
