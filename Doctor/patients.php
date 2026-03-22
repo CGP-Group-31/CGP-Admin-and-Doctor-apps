@@ -296,7 +296,6 @@ try {
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Gender</th>
-                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -309,13 +308,7 @@ try {
                                         <td><?php echo htmlspecialchars($patient['Phone']); ?></td>
                                         <td><?php echo htmlspecialchars($patient['Email'] ?? '-'); ?></td>
                                         <td><?php echo htmlspecialchars($patient['Gender'] ?? '-'); ?></td>
-                                        <td>
-                                            <?php if ((int) $patient['IsActive'] === 1): ?>
-                                                <span class="status-badge status-active">Active</span>
-                                            <?php else: ?>
-                                                <span class="status-badge status-inactive">Inactive</span>
-                                            <?php endif; ?>
-                                        </td>
+
                                         <td>
                                             <a class="view-btn"
                                                 href="patient_data.php?id=<?php echo urlencode($patient['UserID']); ?>">
