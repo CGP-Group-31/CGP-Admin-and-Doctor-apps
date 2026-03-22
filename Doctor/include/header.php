@@ -1,13 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trustcare Doctor Portal</title>
 
-   
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -99,16 +101,16 @@
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
         }
 
         .info-card {
             background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            padding: 24px;
-            box-shadow: var(--shadow);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid #E5ECE9;
+            transition: 0.2s;
         }
 
         .info-card h3 {
@@ -122,6 +124,17 @@
             color: var(--description-text);
             font-size: 15px;
             line-height: 1.7;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .big-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2E7D7A;
+            margin: 10px 0;
         }
 
         .wide-card {
@@ -153,6 +166,40 @@
             .main-content {
                 padding: 18px;
             }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .dashboard-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #E5ECE9;
+        }
+
+        .dashboard-card.large {
+            grid-column: span 2;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #EEF2F1;
+        }
+
+        .alert-item {
+            background: #FFF4F4;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            color: #C62828;
+            font-size: 14px;
         }
     </style>
 </head>

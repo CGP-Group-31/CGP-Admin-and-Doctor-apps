@@ -8,7 +8,7 @@ if (empty($_SESSION['doctor_logged_in'])) {
 }
 
 $doctorId = $_SESSION['doctor_id'];
-$patientId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$patientId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($patientId <= 0) {
     header("Location: patients.php");
@@ -90,7 +90,8 @@ if ($curlError) {
     $medicalProfileError = "Medical profile not available.";
 }
 
-function formatDateValue($dateValue) {
+function formatDateValue($dateValue)
+{
     if (empty($dateValue)) {
         return '-';
     }
@@ -103,21 +104,46 @@ function formatDateValue($dateValue) {
     return date('Y-m-d', $timestamp);
 }
 
-function safeValue($value) {
-    if (!isset($value) || $value === null || trim((string)$value) === '') {
+function safeValue($value)
+{
+    if (!isset($value) || $value === null || trim((string) $value) === '') {
         return '-';
     }
-    return htmlspecialchars((string)$value);
+    return htmlspecialchars((string) $value);
+}
+$vitalsData = [];
+
+$vitalsApi = "http://159.65.158.217:8000/api/v1/caregiver/vitals/elder/" . urlencode($patientId) . "/latest?limit_per_type=3";
+
+$ch3 = curl_init();
+curl_setopt_array($ch3, [
+    CURLOPT_URL => $vitalsApi,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER => ["accept: application/json"],
+]);
+
+$response3 = curl_exec($ch3);
+$httpCode3 = curl_getinfo($ch3, CURLINFO_HTTP_CODE);
+curl_close($ch3);
+
+if ($httpCode3 == 200) {
+    $decoded3 = json_decode($response3, true);
+    if (isset($decoded3['categories'])) {
+        $vitalsData = $decoded3['categories'];
+    }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Data Trustcare</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -308,6 +334,7 @@ function safeValue($value) {
             margin-bottom: 10px;
         }
 
+
         .medical-box p {
             font-size: 15px;
             color: var(--primary-text);
@@ -323,6 +350,64 @@ function safeValue($value) {
         table {
             width: 100%;
             border-collapse: collapse;
+        }
+
+        /* ===== VITALS GRID UI ===== */
+        .vitals-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 20px;
+        }
+
+        .vital-card {
+            background: linear-gradient(135deg, #F8FAF9, #FFFFFF);
+            border: 1px solid #E5ECE9;
+            border-radius: 16px;
+            padding: 18px;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .vital-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .vital-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #7C8B89;
+            margin-bottom: 10px;
+        }
+
+        .vital-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2E7D7A;
+        }
+
+        .vital-unit {
+            font-size: 14px;
+            color: #7C8B89;
+            margin-left: 5px;
+        }
+
+        .vital-time {
+            font-size: 12px;
+            color: #9AA7A5;
+            margin-top: 6px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #7C8B89;
+        }
+
+        .empty-state .icon {
+            font-size: 42px;
+            margin-bottom: 10px;
         }
 
         thead th {
@@ -380,6 +465,7 @@ function safeValue($value) {
         }
 
         @media (max-width: 1100px) {
+
             .details-grid,
             .medical-grid {
                 grid-template-columns: 1fr;
@@ -418,9 +504,10 @@ function safeValue($value) {
         }
     </style>
 </head>
+
 <body>
     <div class="layout">
-         <?php include 'include/sidebar.php'; ?> 
+        <?php include 'include/sidebar.php'; ?>
 
         <main class="content">
             <div class="page-header">
@@ -433,167 +520,226 @@ function safeValue($value) {
                     </div>
 
                     <div class="top-actions">
-                        <a href="patients.php">Back to Patients</a>
-                        <div class="divider"></div>
-                        <a href="patient_data.php?id=<?php echo urlencode($patientId); ?>">Refresh Page</a>
-                        <div class="divider"></div>
-                        <a href="#" class="primary-btn">Medical Profile</a>
-                    </div>
-                </div>
-            </div>
+                        <a href="patients.php" class="back-btn">
+                            ← Back
+                        </a>
+                        <a href="elder_medications.php?elder_id=<?php echo urlencode($patientId); ?>"
+                            class="medicine-btn">
+                            View Medicines
+                        </a>
 
-            <div class="section-card">
-                <div class="section-head">
-                    <h2>Patient Information</h2>
-                    <p>Basic details of the selected patient.</p>
-                </div>
-
-                <div class="details-grid">
-                    <div class="detail-box">
-                        <span>Patient ID</span>
-                        <strong><?php echo htmlspecialchars($patient['UserID']); ?></strong>
                     </div>
 
-                    <div class="detail-box">
-                        <span>Full Name</span>
-                        <strong><?php echo htmlspecialchars($patient['FullName']); ?></strong>
-                    </div>
-
-                    <div class="detail-box">
-                        <span>Phone</span>
-                        <strong><?php echo htmlspecialchars($patient['Phone']); ?></strong>
-                    </div>
-
-                    <div class="detail-box">
-                        <span>Email</span>
-                        <strong><?php echo safeValue($patient['Email'] ?? null); ?></strong>
-                    </div>
-
-                    <div class="detail-box">
-                        <span>Date of Birth</span>
-                        <strong><?php echo formatDateValue($patient['DateOfBirth']); ?></strong>
-                    </div>
-
-                    <div class="detail-box">
-                        <span>Gender</span>
-                        <strong><?php echo safeValue($patient['Gender'] ?? null); ?></strong>
-                    </div>
-
-                    <div class="detail-box">
-                        <span>Address</span>
-                        <strong><?php echo safeValue($patient['address'] ?? null); ?></strong>
-                    </div>
-
-                    <div class="detail-box">
-                        <span>Status</span>
-                        <strong>
-                            <?php if ((int)$patient['IsActive'] === 1): ?>
-                                <span class="badge badge-green">Active</span>
-                            <?php else: ?>
-                                <span class="badge badge-gray">Inactive</span>
-                            <?php endif; ?>
-                        </strong>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-card">
-                <div class="section-head">
-                    <h2>Medical Profile</h2>
-                </div>
-
-                <?php if ($medicalProfileError !== ''): ?>
-                    <div class="error-box"><?php echo htmlspecialchars($medicalProfileError); ?></div>
-                <?php elseif ($medicalProfile): ?>
-                    <div class="medical-grid">
-                        <div class="medical-box">
-                            <h3>Blood Type</h3>
-                            <p><?php echo safeValue($medicalProfile['BloodType'] ?? null); ?></p>
+                    <div class="section-card">
+                        <div class="section-head">
+                            <h2>Patient Information</h2>
+                            <p>Basic details of the selected patient.</p>
                         </div>
 
-                        <div class="medical-box">
-                            <h3>Doctor Name</h3>
-                            <p><?php echo safeValue($medicalProfile['DoctorName'] ?? null); ?></p>
-                        </div>
+                        <div class="details-grid">
+                            <div class="detail-box">
+                                <span>Patient ID</span>
+                                <strong><?php echo htmlspecialchars($patient['UserID']); ?></strong>
+                            </div>
 
-                        <div class="medical-box full">
-                            <h3>Allergies</h3>
-                            <p><?php echo safeValue($medicalProfile['Allergies'] ?? null); ?></p>
-                        </div>
+                            <div class="detail-box">
+                                <span>Full Name</span>
+                                <strong><?php echo htmlspecialchars($patient['FullName']); ?></strong>
+                            </div>
 
-                        <div class="medical-box full">
-                            <h3>Chronic Conditions</h3>
-                            <p><?php echo safeValue($medicalProfile['ChronicConditions'] ?? null); ?></p>
-                        </div>
+                            <div class="detail-box">
+                                <span>Phone</span>
+                                <strong><?php echo htmlspecialchars($patient['Phone']); ?></strong>
+                            </div>
 
-                        <div class="medical-box full">
-                            <h3>Past Surgeries</h3>
-                            <p><?php echo safeValue($medicalProfile['PastSurgeries'] ?? null); ?></p>
-                        </div>
+                            <div class="detail-box">
+                                <span>Email</span>
+                                <strong><?php echo safeValue($patient['Email'] ?? null); ?></strong>
+                            </div>
 
-                        <div class="medical-box full">
-                            <h3>Emergency Notes</h3>
-                            <p><?php echo safeValue($medicalProfile['EmergencyNotes'] ?? null); ?></p>
+                            <div class="detail-box">
+                                <span>Date of Birth</span>
+                                <strong><?php echo formatDateValue($patient['DateOfBirth']); ?></strong>
+                            </div>
+
+                            <div class="detail-box">
+                                <span>Gender</span>
+                                <strong><?php echo safeValue($patient['Gender'] ?? null); ?></strong>
+                            </div>
+
+                            <div class="detail-box">
+                                <span>Address</span>
+                                <strong><?php echo safeValue($patient['address'] ?? null); ?></strong>
+                            </div>
+
+                            <div class="detail-box">
+                                <span>Status</span>
+                                <strong>
+                                    <?php if ((int) $patient['IsActive'] === 1): ?>
+                                        <span class="badge badge-green">Active</span>
+                                    <?php else: ?>
+                                        <span class="badge badge-gray">Inactive</span>
+                                    <?php endif; ?>
+                                </strong>
+                            </div>
                         </div>
                     </div>
-                <?php else: ?>
-                    <div class="message-box">No medical profile data found.</div>
-                <?php endif; ?>
-            </div>
+                    <div class="section-card">
+                        <div class="section-head">
+                            <h2>Latest Vitals</h2>
+                            <p>Recent health measurements of the patient</p>
+                        </div>
 
-            <div class="section-card">
-                <div class="section-head">
-                    <h2>Caregiver Information</h2>
-                    <p>Caregiver records linked to this patient.</p>
-                </div>
+                        <div class="section-body">
 
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Caregiver ID</th>
-                                <th>Full Name</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-                                <th>Relationship</th>
-                                <th>Primary</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($caregivers)): ?>
-                                <?php foreach ($caregivers as $caregiver): ?>
+                            <?php if (!empty($vitalsData)) { ?>
+
+                                <div class="vitals-grid">
+
+                                    <?php foreach ($vitalsData as $vital) {
+                                        $latest = $vital['last'][0] ?? null;
+                                        ?>
+
+                                        <div class="vital-card">
+
+                                            <div class="vital-title">
+                                                <?php echo safeValue($vital['vital_name']); ?>
+                                            </div>
+
+                                            <?php if ($latest) { ?>
+
+                                                <div class="vital-value">
+                                                    <?php echo safeValue($latest['value']); ?>
+                                                    <span class="vital-unit">
+                                                        <?php echo safeValue($vital['unit']); ?>
+                                                    </span>
+                                                </div>
+
+                                                <div class="vital-time">
+                                                    <?php echo date('M d, H:i', strtotime($latest['recorded_at'])); ?>
+                                                </div>
+
+                                            <?php } else { ?>
+
+                                                <div class="vital-time">No records</div>
+
+                                            <?php } ?>
+
+                                        </div>
+
+                                    <?php } ?>
+
+                                </div>
+
+                            <?php } else { ?>
+
+                                <div class="empty-state">
+                                    <div class="icon"></div>
+                                    <h3>No Vitals Data</h3>
+                                    <p>This patient has no recorded vitals yet.</p>
+                                </div>
+
+                            <?php } ?>
+
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="section-head">
+                            <h2>Medical Profile</h2>
+                        </div>
+
+                        <?php if ($medicalProfileError !== ''): ?>
+                            <div class="error-box"><?php echo htmlspecialchars($medicalProfileError); ?></div>
+                        <?php elseif ($medicalProfile): ?>
+                            <div class="medical-grid">
+                                <div class="medical-box">
+                                    <h3>Blood Type</h3>
+                                    <p><?php echo safeValue($medicalProfile['BloodType'] ?? null); ?></p>
+                                </div>
+
+                                <div class="medical-box">
+                                    <h3>Doctor Name</h3>
+                                    <p><?php echo safeValue($medicalProfile['DoctorName'] ?? null); ?></p>
+                                </div>
+
+                                <div class="medical-box full">
+                                    <h3>Allergies</h3>
+                                    <p><?php echo safeValue($medicalProfile['Allergies'] ?? null); ?></p>
+                                </div>
+
+                                <div class="medical-box full">
+                                    <h3>Chronic Conditions</h3>
+                                    <p><?php echo safeValue($medicalProfile['ChronicConditions'] ?? null); ?></p>
+                                </div>
+
+                                <div class="medical-box full">
+                                    <h3>Past Surgeries</h3>
+                                    <p><?php echo safeValue($medicalProfile['PastSurgeries'] ?? null); ?></p>
+                                </div>
+
+                                <div class="medical-box full">
+                                    <h3>Emergency Notes</h3>
+                                    <p><?php echo safeValue($medicalProfile['EmergencyNotes'] ?? null); ?></p>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <div class="message-box">No medical profile data found.</div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-head">
+                            <h2>Caregiver Information</h2>
+                            <p>Caregiver records linked to this patient.</p>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($caregiver['CaregiverID']); ?></td>
-                                        <td><?php echo htmlspecialchars($caregiver['FullName']); ?></td>
-                                        <td><?php echo htmlspecialchars($caregiver['Phone']); ?></td>
-                                        <td><?php echo safeValue($caregiver['Email'] ?? null); ?></td>
-                                        <td><?php echo safeValue($caregiver['RelationshipType'] ?? null); ?></td>
-                                        <td>
-                                            <?php if ((int)$caregiver['IsPrimary'] === 1): ?>
-                                                <span class="badge badge-green">Yes</span>
-                                            <?php else: ?>
-                                                <span class="badge badge-gray">No</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <?php if ((int)$caregiver['IsActive'] === 1): ?>
-                                                <span class="badge badge-green">Active</span>
-                                            <?php else: ?>
-                                                <span class="badge badge-gray">Inactive</span>
-                                            <?php endif; ?>
-                                        </td>
+                                        <th>Caregiver ID</th>
+                                        <th>Full Name</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Relationship</th>
+                                        <th>Primary</th>
+                                        <th>Status</th>
                                     </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="7" class="message-box">No caregiver records found.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($caregivers)): ?>
+                                        <?php foreach ($caregivers as $caregiver): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($caregiver['CaregiverID']); ?></td>
+                                                <td><?php echo htmlspecialchars($caregiver['FullName']); ?></td>
+                                                <td><?php echo htmlspecialchars($caregiver['Phone']); ?></td>
+                                                <td><?php echo safeValue($caregiver['Email'] ?? null); ?></td>
+                                                <td><?php echo safeValue($caregiver['RelationshipType'] ?? null); ?></td>
+                                                <td>
+                                                    <?php if ((int) $caregiver['IsPrimary'] === 1): ?>
+                                                        <span class="badge badge-green">Yes</span>
+                                                    <?php else: ?>
+                                                        <span class="badge badge-gray">No</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <?php if ((int) $caregiver['IsActive'] === 1): ?>
+                                                        <span class="badge badge-green">Active</span>
+                                                    <?php else: ?>
+                                                        <span class="badge badge-gray">Inactive</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="7" class="message-box">No caregiver records found.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
         </main>
     </div>
 </body>
