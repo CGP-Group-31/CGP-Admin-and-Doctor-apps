@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $doctor = $stmt->fetch();
 
             if ($doctor) {
-                if ((int)$doctor['IsActive'] !== 1) {
+                if ((int) $doctor['IsActive'] !== 1) {
                     $error = "Your account is inactive. Please contact the administrator.";
                 } elseif (password_verify($password, $doctor['PasswordHash'])) {
                     session_regenerate_id(true);
@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,7 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -132,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         .brand-logo-wrap {
             width: 240px;
             height: 240px;
-            background: rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.12);
             border-radius: 36px;
             display: flex;
             align-items: center;
@@ -150,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         .brand-subtitle {
             font-size: 16px;
             line-height: 1.8;
-            color: rgba(255,255,255,0.82);
+            color: rgba(255, 255, 255, 0.82);
             max-width: 500px;
         }
 
@@ -283,10 +286,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 height: 115px;
             }
 
-         
+
         }
     </style>
 </head>
+
 <body>
     <div class="page">
         <div class="login-shell">
@@ -296,7 +300,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                 </div>
 
                 <p class="brand-subtitle">
-                    Welcome to Trustcare Doctor System, designed to help doctors manage patient care efficiently and securely.
+                    Welcome to Trustcare Doctor System, designed to help doctors manage patient care efficiently and
+                    securely.
                 </p>
             </div>
 
@@ -315,25 +320,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                     <form method="POST" action="">
                         <div class="form-group">
                             <label class="form-label" for="email">Email Address</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                class="form-input"
-                                placeholder="Enter your email"
-                                required
+                            <input type="email" id="email" name="email" class="form-input"
+                                placeholder="Enter your email" required
                                 value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label" for="password">Password</label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                class="form-input"
-                                placeholder="Enter your password"
-                                required>
+                            <input type="password" id="password" name="password" class="form-input"
+                                placeholder="Enter your password" required>
                         </div>
 
                         <button type="submit" name="login" class="btn-login">Login</button>
@@ -345,4 +340,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         </div>
     </div>
 </body>
+
 </html>

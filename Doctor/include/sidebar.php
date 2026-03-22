@@ -16,6 +16,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         display: flex;
         flex-direction: column;
     }
+
     .sidebar-brand {
         display: flex;
         align-items: center;
@@ -99,22 +100,25 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         font-weight: 600;
     }
 
-    .sidebar-logout {
-        padding-top: 10px;
-    }
     .sidebar-logout a {
         display: block;
         text-align: center;
-        padding: 13px 15px;
+        padding: 14px;
         border-radius: 12px;
         background: #C62828;
         color: #ffffff;
         font-family: 'Poppins', sans-serif;
         font-size: 15px;
         font-weight: 600;
-        transition: background 0.2s ease;
         text-decoration: none;
+        transition: 0.2s ease;
     }
+
+    .sidebar-logout {
+        margin-top: auto;
+        padding-top: 20px;
+    }
+
 
     .sidebar-logout a:hover {
         background: #b71c1c;
@@ -126,6 +130,46 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             min-height: auto;
             padding: 18px 14px;
         }
+    }
+
+    .dashboard-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #E5ECE9;
+        margin-top: 20px;
+    }
+
+    .list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #EEF2F1;
+    }
+
+    .list-item:last-child {
+        border-bottom: none;
+    }
+
+    .list-item strong {
+        display: block;
+        font-size: 15px;
+    }
+
+    .sub-text {
+        font-size: 13px;
+        color: #7C8B89;
+    }
+
+    .date {
+        font-size: 12px;
+        color: #9AA7A5;
+    }
+
+    .empty-text {
+        color: #7C8B89;
+        font-size: 14px;
     }
 </style>
 
@@ -144,9 +188,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
     <nav class="sidebar-nav">
         <a href="dashboard.php" class="<?php echo $currentPage === 'dashboard.php' ? 'active' : ''; ?>">Dashboard</a>
-        <a href="patients.php" class="<?php echo ($currentPage === 'patients.php' || $currentPage === 'patient_data.php') ? 'active' : ''; ?>">Patients</a>
+        <a href="patients.php"
+            class="<?php echo ($currentPage === 'patients.php' || $currentPage === 'patient_data.php') ? 'active' : ''; ?>">Patients</a>
+        <a href="profile.php" class="<?php echo $currentPage === 'profile.php' ? 'active' : ''; ?>">Profile</a>
 
-        <a href="#">Profile</a>
     </nav>
 
     <div class="sidebar-logout">

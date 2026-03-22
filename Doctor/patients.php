@@ -37,12 +37,15 @@ try {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patients - Trustcare</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
@@ -258,9 +261,10 @@ try {
         }
     </style>
 </head>
+
 <body>
     <div class="layout">
-         <?php include 'include/sidebar.php'; ?> 
+        <?php include 'include/sidebar.php'; ?>
 
         <main class="content">
             <div class="top-section">
@@ -270,13 +274,9 @@ try {
 
             <div class="search-card">
                 <form method="GET" class="search-form">
-                    <input
-                        type="text"
-                        name="search"
-                        class="search-input"
+                    <input type="text" name="search" class="search-input"
                         placeholder="Search by patient name or mobile number"
-                        value="<?php echo htmlspecialchars($search); ?>"
-                    >
+                        value="<?php echo htmlspecialchars($search); ?>">
                     <button type="submit" class="search-btn">Search</button>
                     <a href="patients.php" class="reset-btn">Reset</a>
                 </form>
@@ -310,14 +310,15 @@ try {
                                         <td><?php echo htmlspecialchars($patient['Email'] ?? '-'); ?></td>
                                         <td><?php echo htmlspecialchars($patient['Gender'] ?? '-'); ?></td>
                                         <td>
-                                            <?php if ((int)$patient['IsActive'] === 1): ?>
+                                            <?php if ((int) $patient['IsActive'] === 1): ?>
                                                 <span class="status-badge status-active">Active</span>
                                             <?php else: ?>
                                                 <span class="status-badge status-inactive">Inactive</span>
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <a class="view-btn" href="patient_data.php?id=<?php echo urlencode($patient['UserID']); ?>">
+                                            <a class="view-btn"
+                                                href="patient_data.php?id=<?php echo urlencode($patient['UserID']); ?>">
                                                 View
                                             </a>
                                         </td>
@@ -337,4 +338,5 @@ try {
         </main>
     </div>
 </body>
+
 </html>
