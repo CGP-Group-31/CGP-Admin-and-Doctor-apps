@@ -12,6 +12,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         padding: 22px 16px;
         border-right: 1px solid rgba(255, 255, 255, 0.08);
         flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        align-self: flex-start;
+        overflow-y: auto;
 
         display: flex;
         flex-direction: column;
@@ -129,6 +134,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             width: 100%;
             min-height: auto;
             padding: 18px 14px;
+            position: static;
+            height: auto;
+            overflow-y: visible;
         }
     }
 
@@ -189,9 +197,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <nav class="sidebar-nav">
         <a href="dashboard.php" class="<?php echo $currentPage === 'dashboard.php' ? 'active' : ''; ?>">Dashboard</a>
         <a href="patients.php"
-            class="<?php echo ($currentPage === 'patients.php' || $currentPage === 'patient_data.php') ? 'active' : ''; ?>">Patients</a>
+            class="<?php echo in_array($currentPage, ['patients.php', 'patient_data.php', 'elder_medications.php'], true) ? 'active' : ''; ?>">Patients</a>
         <a href="profile.php" class="<?php echo $currentPage === 'profile.php' ? 'active' : ''; ?>">Profile</a>
-
     </nav>
 
     <div class="sidebar-logout">

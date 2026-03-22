@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require 'include/db.php';
 
@@ -58,254 +58,232 @@ if ($httpCode2 == 200) {
     }
 }
 ?>
+<?php include 'include/header.php'; ?>
 
-<!DOCTYPE html>
-<html>
+<style>
+    :root {
+        --card-bg: #FFFFFF;
+        --border: #E5ECE9;
+        --text: #243333;
+        --subtext: #6F7F7D;
+    }
 
-<head>
-    <title>Medicine Management</title>
+    .section-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        margin-bottom: 22px;
+        overflow: hidden;
+    }
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap"
-        rel="stylesheet">
+    .section-head {
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+    }
 
-    <style>
-        :root {
-            --primary: #2E7D7A;
-            --background: #F6F7F3;
-            --card-bg: #FFFFFF;
-            --border: #E5ECE9;
-            --text: #243333;
-            --subtext: #6F7F7D;
-        }
-        body {
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
-            background: var(--background);
-        }
+    .section-head h2 {
+        font-family: 'Poppins';
+        font-size: 22px;
+        margin: 0;
+    }
 
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
+    .section-body {
+        padding: 20px;
+    }
 
-        .content {
-            flex: 1;
-            padding: 28px;
-        }
-        .section-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            margin-bottom: 22px;
-            overflow: hidden;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        .section-head {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-        }
+    th {
+        background: #F8FAF9;
+        padding: 14px;
+        text-align: left;
+        font-family: 'Poppins';
+        font-size: 14px;
+        border-bottom: 1px solid var(--border);
+    }
 
-        .section-head h2 {
-            font-family: 'Poppins';
-            font-size: 22px;
-            margin: 0;
-        }
+    td {
+        padding: 14px;
+        border-bottom: 1px solid #EEF2F1;
+    }
 
-        .section-body {
-            padding: 20px;
-        }
+    tr:hover {
+        background: #FAFBFB;
+    }
 
-      table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    .time-chip {
+        background: #EDF1F0;
+        padding: 5px 8px;
+        border-radius: 6px;
+        margin: 2px;
+        display: inline-block;
+        font-size: 12px;
+    }
 
-        th {
-            background: #F8FAF9;
-            padding: 14px;
-            text-align: left;
-            font-family: 'Poppins';
-            font-size: 14px;
-            border-bottom: 1px solid var(--border);
-        }
+    .badge {
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-family: 'Poppins';
+    }
 
-        td {
-            padding: 14px;
-            border-bottom: 1px solid #EEF2F1;
-        }
+    .taken {
+        background: #E4F4EE;
+        color: #1B6E4B;
+    }
 
-        tr:hover {
-            background: #FAFBFB;
-        }
+    .missed {
+        background: #FDECEA;
+        color: #C62828;
+    }
 
-        .time-chip {
-            background: #EDF1F0;
-            padding: 5px 8px;
-            border-radius: 6px;
-            margin: 2px;
-            display: inline-block;
-            font-size: 12px;
-        }
+    .skipped {
+        background: #FFF4E5;
+        color: #F57C00;
+    }
 
-        .badge {
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-family: 'Poppins';
-        }
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
 
-        .taken {
-            background: #E4F4EE;
-            color: #1B6E4B;
-        }
+    .back-btn {
+        padding: 10px 14px;
+        background: #2E7D7A;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-family: 'Poppins';
+        font-size: 14px;
+        font-weight: 600;
+    }
 
-        .missed {
-            background: #FDECEA;
-            color: #C62828;
-        }
+    .date-form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
 
-        .skipped {
-            background: #FFF4E5;
-            color: #F57C00;
-        }
+    input[type="date"] {
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+    }
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+    button {
+        padding: 8px 14px;
+        background: #2E7D7A;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+</style>
 
-        .back-btn {
-            padding: 10px 14px;
-            background: var(--primary);
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-family: 'Poppins';
-            font-size: 14px;
-        }
-
-        .date-form {
-            display: flex;
-            gap: 10px;
-        }
-
-        input[type="date"] {
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        button {
-            padding: 8px 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="layout">
-        <?php include 'include/sidebar.php'; ?>
-        <main class="content">
-            <div class="top-bar">
-                <a href="patient_data.php?id=<?php echo $elder_id; ?>" class="back-btn">⬅ Back</a>
+<div class="dashboard-layout">
+    <?php include 'include/sidebar.php'; ?>
+    <main class="main-content">
+        <div class="topbar">
+            <div>
+                <h1>Medicine Management</h1>
+                <p>Daily adherence and medication list for this elder.</p>
             </div>
-            <div class="section-card">
-                <div class="section-head">
-                    <h2>Daily Medication (Adherence)</h2>
-                </div>
 
-                <div class="section-body">
+            <a href="patient_data.php?id=<?php echo $elder_id; ?>" class="back-btn">Back</a>
+        </div>
 
-                    <div class="top-bar">
-                        <form method="GET" class="date-form">
-                            <input type="hidden" name="elder_id" value="<?php echo $elder_id; ?>">
-                            <input type="date" name="date" value="<?php echo $selected_date; ?>">
-                            <button>Filter</button>
-                        </form>
-                    </div>
+        <div class="top-bar">
+            <form method="GET" class="date-form">
+                <input type="hidden" name="elder_id" value="<?php echo $elder_id; ?>">
+                <input type="date" name="date" value="<?php echo $selected_date; ?>">
+                <button>Filter</button>
+            </form>
+        </div>
 
-                    <?php if (!empty($dailyData)) { ?>
-                        <table>
+        <div class="section-card">
+            <div class="section-head">
+                <h2>Daily Medication (Adherence)</h2>
+            </div>
+
+            <div class="section-body">
+                <?php if (!empty($dailyData)) { ?>
+                    <table>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Dosage</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+
+                        <?php foreach ($dailyData as $item) { ?>
                             <tr>
-                                <th>Medicine</th>
-                                <th>Dosage</th>
-                                <th>Time</th>
-                                <th>Status</th>
+                                <td><?php echo $item['medication_name']; ?></td>
+                                <td><?php echo $item['dosage']; ?></td>
+                                <td><?php echo date('H:i', strtotime($item['scheduled_for'])); ?></td>
+                                <td>
+                                    <span class="badge <?php echo strtolower($item['status']); ?>">
+                                        <?php echo $item['status']; ?>
+                                    </span>
+                                </td>
                             </tr>
+                        <?php } ?>
+                    </table>
+                <?php } else { ?>
+                    <p>No records found.</p>
+                <?php } ?>
+            </div>
+        </div>
 
-                            <?php foreach ($dailyData as $item) { ?>
-                                <tr>
-                                    <td><?php echo $item['medication_name']; ?></td>
-                                    <td><?php echo $item['dosage']; ?></td>
-                                    <td><?php echo date('H:i', strtotime($item['scheduled_for'])); ?></td>
-                                    <td>
-                                        <span class="badge <?php echo strtolower($item['status']); ?>">
-                                            <?php echo $item['status']; ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </table>
-                    <?php } else { ?>
-                        <p>No records found.</p>
-                    <?php } ?>
-
-                </div>
+        <div class="section-card">
+            <div class="section-head">
+                <h2>Medicine List (Elder ID: <?php echo $elder_id; ?>)</h2>
             </div>
 
-            <div class="section-card">
-                <div class="section-head">
-                    <h2>Medicine List (Elder ID: <?php echo $elder_id; ?>)</h2>
-                </div>
+            <div class="section-body">
+                <?php if (!empty($medicines)) { ?>
+                    <table>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Dosage</th>
+                            <th>Instructions</th>
+                            <th>Times</th>
+                            <th>Repeat</th>
+                            <th>Start</th>
+                            <th>End</th>
+                        </tr>
 
-                <div class="section-body">
-
-
-                    <?php if (!empty($medicines)) { ?>
-                        <table>
+                        <?php foreach ($medicines as $med) { ?>
                             <tr>
-                                <th>Medicine</th>
-                                <th>Dosage</th>
-                                <th>Instructions</th>
-                                <th>Times</th>
-                                <th>Repeat</th>
-                                <th>Start</th>
-                                <th>End</th>
+                                <td><strong><?php echo $med['name']; ?></strong></td>
+                                <td><?php echo $med['dosage']; ?></td>
+                                <td><?php echo $med['instructions']; ?></td>
+                                <td>
+                                    <?php foreach ($med['times'] as $time) { ?>
+                                        <span class="time-chip"><?php echo $time; ?></span>
+                                    <?php } ?>
+                                </td>
+                                <td><?php echo $med['repeatDays']; ?></td>
+                                <td><?php echo $med['startDate']; ?></td>
+                                <td><?php echo $med['endDate']; ?></td>
                             </tr>
+                        <?php } ?>
+                    </table>
+                <?php } else { ?>
+                    <p>No medicines found.</p>
+                <?php } ?>
 
-                            <?php foreach ($medicines as $med) { ?>
-                                <tr>
-                                    <td><strong><?php echo $med['name']; ?></strong></td>
-                                    <td><?php echo $med['dosage']; ?></td>
-                                    <td><?php echo $med['instructions']; ?></td>
-                                    <td>
-                                        <?php foreach ($med['times'] as $time) { ?>
-                                            <span class="time-chip"><?php echo $time; ?></span>
-                                        <?php } ?>
-                                    </td>
-                                    <td><?php echo $med['repeatDays']; ?></td>
-                                    <td><?php echo $med['startDate']; ?></td>
-                                    <td><?php echo $med['endDate']; ?></td>
-                                </tr>
-                            <?php } ?>
-                        </table>
-                    <?php } else { ?>
-                        <p>No medicines found.</p>
-                    <?php } ?>
-
-                </div>
             </div>
+        </div>
 
-        </main>
-    </div>
+    </main>
+</div>
 </body>
-
 </html>
