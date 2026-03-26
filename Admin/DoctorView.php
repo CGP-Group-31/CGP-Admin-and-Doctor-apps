@@ -118,10 +118,19 @@ if (!$doctor) {
 
         <div class="view-actions">
             <a href="Doctors.php" class="btn back">Back</a>
+            <button type="button" class="btn delete-btn" onclick="deleteDoc()">Delete</button>
         </div>
     </form>
     </div>
   </div>
+
+<script>
+function deleteDoc() {
+    if (confirm("Permanently delete this doctor?")) {
+        window.location.href = "DoctorView.php?id=<?= $id ?>&action=delete";
+    }
+}
+</script>
 
 </body>
 </html>
