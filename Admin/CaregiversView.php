@@ -130,21 +130,10 @@ try {
 
       <div class="view-actions">
         <a href="Caregivers.php" class="btn cancel-btn">Back</a>
-        <button type="button" class="btn delete-btn" onclick="confirmDelete(<?= $caregiver['UserID'] ?>)">
-            <i class="fas fa-trash"></i> Delete
-        </button>
       </div>
     </form>
     </div>
   </div>
-
-  <script>
-    function confirmDelete(id) {
-        if (confirm("WARNING: This is a HARD DELETE. It will remove this caregiver and ALL medication records they created. Continue?")) {
-            window.location.href = "CaregiversView.php?id=" + id + "&action=delete";
-        }
-    }
-  </script>
 
 </body>
 </html>

@@ -124,19 +124,10 @@ if (!$elder) {
 
         <div class="view-actions">
             <a href="Elders.php" class="btn cancel-btn">Back</a>
-            <button type="button" class="btn delete-btn" onclick="confirmDeletion()">Delete Forever</button>
         </div>
     </form>
     </div>
   </div>
-
-<script>
-function confirmDeletion() {
-    if (confirm("Are you absolutely sure? This will delete the elder and all their history.")) {
-        window.location.href = "EldersView.php?id=<?= $id ?>&action=delete";
-    }
-}
-</script>
 
 </body>
 </html>

@@ -117,19 +117,10 @@ try {
 
         <div class="view-actions">
           <a href="CaregiverLinks.php" class="btn back">Back</a>
-          <button type="button" class="btn delete-btn" onclick="confirmDelete()">Remove Link</button>
         </div>
       </form>
     </div>
   </div>
-
-<script>
-function confirmDelete() {
-    if (confirm("Are you sure you want to remove this assignment?")) {
-        window.location.href = "CaregiverLinksView.php?id=<?= $id ?>&action=delete";
-    }
-}
-</script>
 
 </body>
 </html>
