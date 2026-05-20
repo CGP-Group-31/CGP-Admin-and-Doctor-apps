@@ -86,7 +86,6 @@ The caregiver section lists caregiver accounts in the system.
 
 Caregiver management includes:
 
-- Caregiver ID.
 - Full name.
 - Email.
 - Phone number.
@@ -94,7 +93,7 @@ Caregiver management includes:
 - Number of assigned elders.
 - Search support.
 - Profile viewing.
-- Caregiver delete actions from the profile page.
+- Caregiver deactivate actions from the profile page.
 
 This helps admins monitor who is responsible for elder care and whether caregivers are active in the platform.
 
@@ -104,14 +103,13 @@ The elder section lists elder users and their care status.
 
 Elder management includes:
 
-- Elder ID.
 - Full name.
 - Age.
 - Risk status.
 - Assigned caregiver.
 - Search support.
 - Elder profile viewing.
-- Elder delete actions from the profile page.
+- Elder deactivate actions from the profile page.
 
 The elder list shows whether an elder is stable or high-risk based on recent health/vital information. This makes it easier for admins to identify users who may need attention.
 
@@ -129,7 +127,7 @@ Doctor management includes:
 - Hospital or clinic.
 - Doctor contact information.
 - Password creation for doctor access.
-- Doctor delete actions from the profile page.
+- Doctor deactivate actions from the profile page.
 
 This allows the care platform to keep doctor records organized and linked to patient care.
 
@@ -154,7 +152,6 @@ Caregiver links show the relationship between elders and caregivers.
 
 Caregiver link details include:
 
-- Relationship ID.
 - Elder name.
 - Caregiver name.
 - Relationship type.
@@ -536,20 +533,7 @@ http://localhost/CGP/Doctor/
 - Both apps use soft healthcare colors.
 - Both apps are designed for quick scanning of important information.
 - Responsive layouts make the pages easier to use on smaller screens.
-
-## Future Improvements
-
-- Add pagination for large user and patient lists.
-- Add audit logs for important actions.
-- Add stronger permission levels for different admin staff.
-- Add CSRF protection for forms and delete actions.
-- Add better loading states for API-powered pages.
-- Add patient vital trend charts for doctors.
-- Add appointment management.
-- Add clinical notes for doctors.
-- Improve repeated layout code with shared components.
-- Move styling into more centralized stylesheet files.
-
+  
 ## Project Summary
 
 TrustCare includes an Admin app and Doctor app for elderly care management. The Admin app handles full platform operations such as user management, emergency monitoring, complaints, caregiver links, and AI wellness insights. The Doctor app focuses on assigned patient care by showing patient profiles, caregivers, medical information, latest vitals, medicines, and adherence reports.
